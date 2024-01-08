@@ -1,0 +1,54 @@
+{
+  "project_info": {
+    "project_number": "658574475688",
+    "project_id": "ventureit-firebase",
+    "storage_bucket": "ventureit-firebase.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:658574475688:android:19ccde62a54af1e6bb1d9d",
+        "android_client_info": {
+          "package_name": "com.jawir.ventureit"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "658574475688-0tbqa28o4magocdgvqg4tl7bmbjqaaf9.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.jawir.ventureit",
+            "certificate_hash": "604c4ed885e221afa9da45dd1e0cd967cdc80f59"
+          }
+        },
+        {
+          "client_id": "658574475688-r27dch6i3gtrrco6fe2q3reshbh79om8.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAcstKOyxhm3bR1XJhHWtgUQzNZtfxGAR4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "658574475688-r27dch6i3gtrrco6fe2q3reshbh79om8.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "658574475688-dfc2gfgqh6lf3reiupplklhe6g1f6sfi.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.jawir.ventureit"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
