@@ -46,8 +46,18 @@ class AuthRepository {
       UserModel user;
 
       if (userCredential.additionalUserInfo!.isNewUser) {
-        // TODO fix usermodel
-        user = UserModel(id: userCredential.user!.uid);
+        user = UserModel(
+          id: userCredential.user!.uid,
+          avatar: '',
+          email: userCredential.user!.email!,
+          fullName: userCredential.user!.displayName!,
+          phoneNumber: null,
+          password: null,
+          role: UserRole.member,
+          balance: 0,
+          createdAt: DateTime.now(),
+          updatedAt: DateTime.now(),
+        );
 
         await _userRepository.addUser(user);
       } else {

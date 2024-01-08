@@ -22,7 +22,8 @@ class UserRepository {
 
   Stream<UserModel> getUserData(id) {
     // TODO fix usermodel
-    return _users.doc(id).snapshots().map((event) => UserModel(id: id));
+    return _users.doc(id).snapshots().map(
+        (event) => UserModel.fromMap(event.data() as Map<String, dynamic>));
   }
 
   FutureVoid addUser(UserModel user) async {
