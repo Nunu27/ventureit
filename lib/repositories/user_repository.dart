@@ -21,22 +21,13 @@ class UserRepository {
       _firestore.collection(FirestoreConstants.userCollection);
 
   Stream<UserModel> getUserData(id) {
-    // TODO fix usermodel
     return _users.doc(id).snapshots().map(
         (event) => UserModel.fromMap(event.data() as Map<String, dynamic>));
   }
 
-  FutureVoid addUser(UserModel user) async {
-    try {
-      return right(null);
-    } catch (e) {
-      return left(Failure(message: e.toString()));
-    }
-  }
-
   FutureVoid updateUser(UserModel user) async {
     try {
-      return right(null);
+      return right(await _users.doc(user.id).set(user.toMap()));
     } catch (e) {
       return left(Failure(message: e.toString()));
     }

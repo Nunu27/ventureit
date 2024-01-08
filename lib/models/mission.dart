@@ -30,7 +30,7 @@ class Mission {
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
       'id': id,
-      'type': type.toString(),
+      'type': type.name,
       'finishedCount': finishedCount,
       'maxQuota': maxQuota,
     };

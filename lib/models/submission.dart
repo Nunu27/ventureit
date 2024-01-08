@@ -77,7 +77,7 @@ class Submission {
       'pictures': pictures,
       'priceRange': priceRange.toMap(),
       'description': description,
-      'category': category.toString(),
+      'category': category.name,
       'openHours': openHours.map((x) => x.toMap()).toList(),
       'menu': menu.map((x) => x.toMap()).toList(),
       'externalLinks': externalLinks,

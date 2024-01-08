@@ -7,6 +7,8 @@ class Review {
   final int rating;
   final List<String> mediaList;
   final String description;
+  final List<String> upvotes;
+  final List<String> downvotes;
   final DateTime createdAt;
 
   Review({
@@ -16,6 +18,8 @@ class Review {
     required this.rating,
     required this.mediaList,
     required this.description,
+    required this.upvotes,
+    required this.downvotes,
     required this.createdAt,
   });
 
@@ -26,6 +30,8 @@ class Review {
     int? rating,
     List<String>? mediaList,
     String? description,
+    List<String>? upvotes,
+    List<String>? downvotes,
     DateTime? createdAt,
   }) {
     return Review(
@@ -35,6 +41,8 @@ class Review {
       rating: rating ?? this.rating,
       mediaList: mediaList ?? this.mediaList,
       description: description ?? this.description,
+      upvotes: upvotes ?? this.upvotes,
+      downvotes: downvotes ?? this.downvotes,
       createdAt: createdAt ?? this.createdAt,
     );
   }
@@ -47,6 +55,8 @@ class Review {
       'rating': rating,
       'mediaList': mediaList,
       'description': description,
+      'upvotes': upvotes,
+      'downvotes': downvotes,
       'createdAt': createdAt.millisecondsSinceEpoch,
     };
   }
@@ -59,12 +69,15 @@ class Review {
       rating: map['rating'] as int,
       mediaList: List<String>.from(map['mediaList']),
       description: map['description'] as String,
+      upvotes: List<String>.from(map['upvotes']),
+      downvotes: List<String>.from(map['downvotes']),
       createdAt: DateTime.fromMillisecondsSinceEpoch(map['createdAt'] as int),
     );
   }
+
   @override
   String toString() {
-    return 'Review(id: $id, userId: $userId, businessId: $businessId, rating: $rating, mediaList: $mediaList, description: $description, createdAt: $createdAt)';
+    return 'Review(id: $id, userId: $userId, businessId: $businessId, rating: $rating, mediaList: $mediaList, description: $description, upvotes: $upvotes, downvotes: $downvotes, createdAt: $createdAt)';
   }
 
   @override
@@ -77,6 +90,8 @@ class Review {
         other.rating == rating &&
         listEquals(other.mediaList, mediaList) &&
         other.description == description &&
+        listEquals(other.upvotes, upvotes) &&
+        listEquals(other.downvotes, downvotes) &&
         other.createdAt == createdAt;
   }
 
@@ -88,6 +103,8 @@ class Review {
         rating.hashCode ^
         mediaList.hashCode ^
         description.hashCode ^
+        upvotes.hashCode ^
+        downvotes.hashCode ^
         createdAt.hashCode;
   }
 }
