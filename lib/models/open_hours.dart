@@ -47,7 +47,7 @@ class OpenHours {
   }
 
   @override
-  String toString() => hours.lowerBound == hours.lowerBound
+  String toString() => hours.lowerBound == hours.upperBound
       ? '24 hours'
       : '${hours.lowerBound.toString()}-${hours.upperBound.toString()}';
 

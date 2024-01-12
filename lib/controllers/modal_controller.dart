@@ -16,7 +16,7 @@ class ModalController {
     if (locationPickEnabled) return;
     locationPickEnabled = true;
 
-    showModalBottomSheet(
+    await showModalBottomSheet(
       context: context,
       isDismissible: false,
       isScrollControlled: true,

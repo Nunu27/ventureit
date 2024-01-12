@@ -38,16 +38,20 @@ class BusinessRepository {
     );
 
     if (options.keyword.isNotEmpty) {
-      query = query.where(
-        'name',
-        isGreaterThanOrEqualTo: options.keyword.isEmpty ? 0 : options.keyword,
-        isLessThan: options.keyword.isEmpty
-            ? null
-            : options.keyword.substring(0, options.keyword.length - 1) +
-                String.fromCharCode(
-                  options.keyword.codeUnitAt(options.keyword.length - 1) + 1,
-                ),
-      );
+      query = query
+          .where(
+            'name',
+            isGreaterThanOrEqualTo:
+                options.keyword.isEmpty ? 0 : options.keyword,
+            isLessThan: options.keyword.isEmpty
+                ? null
+                : options.keyword.substring(0, options.keyword.length - 1) +
+                    String.fromCharCode(
+                      options.keyword.codeUnitAt(options.keyword.length - 1) +
+                          1,
+                    ),
+          )
+          .orderBy('name');
     }
 
     return geo
@@ -83,7 +87,7 @@ class BusinessRepository {
 
         businesses.sort((a, b) {
           if (options.sortBy == SortBy.rating) {
-            return ((b.rating - a.rating) * 10).toInt();
+            return (b.rating * 10 - a.rating * 10).toInt();
           } else {
             return (center.distance(
                       lat: a.location.latitude,
