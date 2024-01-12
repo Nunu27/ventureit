@@ -1,3 +1,5 @@
+import 'package:ventureit/models/time_hour.dart';
+
 class Range<T> {
   final T lowerBound;
   final T upperBound;
@@ -26,8 +28,12 @@ class Range<T> {
 
   factory Range.fromMap(Map<String, dynamic> map) {
     return Range(
-      lowerBound: map['lowerBound'] as T,
-      upperBound: map['upperBound'] as T,
+      lowerBound: (T == TimeHour
+          ? TimeHour.fromMap(map['lowerBound'])
+          : map['lowerBound']) as T,
+      upperBound: (T == TimeHour
+          ? TimeHour.fromMap(map['upperBound'])
+          : map['upperBound']) as T,
     );
   }
 

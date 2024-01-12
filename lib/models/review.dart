@@ -10,6 +10,7 @@ class Review {
   final List<String> upvotes;
   final List<String> downvotes;
   final DateTime createdAt;
+  final DateTime updatedAt;
 
   Review({
     required this.id,
@@ -21,6 +22,7 @@ class Review {
     required this.upvotes,
     required this.downvotes,
     required this.createdAt,
+    required this.updatedAt,
   });
 
   Review copyWith({
@@ -33,6 +35,7 @@ class Review {
     List<String>? upvotes,
     List<String>? downvotes,
     DateTime? createdAt,
+    DateTime? updatedAt,
   }) {
     return Review(
       id: id ?? this.id,
@@ -44,6 +47,7 @@ class Review {
       upvotes: upvotes ?? this.upvotes,
       downvotes: downvotes ?? this.downvotes,
       createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
     );
   }
 
@@ -58,6 +62,7 @@ class Review {
       'upvotes': upvotes,
       'downvotes': downvotes,
       'createdAt': createdAt.millisecondsSinceEpoch,
+      'updatedAt': updatedAt.millisecondsSinceEpoch,
     };
   }
 
@@ -72,12 +77,13 @@ class Review {
       upvotes: List<String>.from(map['upvotes']),
       downvotes: List<String>.from(map['downvotes']),
       createdAt: DateTime.fromMillisecondsSinceEpoch(map['createdAt'] as int),
+      updatedAt: DateTime.fromMillisecondsSinceEpoch(map['updatedAt'] as int),
     );
   }
 
   @override
   String toString() {
-    return 'Review(id: $id, userId: $userId, businessId: $businessId, rating: $rating, mediaList: $mediaList, description: $description, upvotes: $upvotes, downvotes: $downvotes, createdAt: $createdAt)';
+    return 'Review(id: $id, userId: $userId, businessId: $businessId, rating: $rating, mediaList: $mediaList, description: $description, upvotes: $upvotes, downvotes: $downvotes, createdAt: $createdAt, updatedAt: $updatedAt)';
   }
 
   @override
@@ -92,7 +98,8 @@ class Review {
         other.description == description &&
         listEquals(other.upvotes, upvotes) &&
         listEquals(other.downvotes, downvotes) &&
-        other.createdAt == createdAt;
+        other.createdAt == createdAt &&
+        other.updatedAt == updatedAt;
   }
 
   @override
@@ -105,6 +112,7 @@ class Review {
         description.hashCode ^
         upvotes.hashCode ^
         downvotes.hashCode ^
+        updatedAt.hashCode ^
         createdAt.hashCode;
   }
 }

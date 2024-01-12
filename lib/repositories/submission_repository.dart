@@ -4,11 +4,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:ventureit/constants/firestore_constants.dart';
-import 'package:ventureit/models/failure.dart';
-import 'package:ventureit/models/submission.dart';
+import 'package:ventureit/models/submission/submission.dart';
 import 'package:ventureit/providers/firebase_provider.dart';
 import 'package:ventureit/repositories/storage_repository.dart';
 import 'package:ventureit/type_defs.dart';
+import 'package:ventureit/utils.dart';
 
 final submissionRepositoryProvider = Provider((ref) {
   return SubmissionRepository(
@@ -37,7 +37,7 @@ class SubmissionRepository {
     try {
       return right(null);
     } catch (e) {
-      return left(Failure(message: e.toString()));
+      return left(getError(e));
     }
   }
 
@@ -45,7 +45,7 @@ class SubmissionRepository {
     try {
       return right(null);
     } catch (e) {
-      return left(Failure(message: e.toString()));
+      return left(getError(e));
     }
   }
 
@@ -53,7 +53,7 @@ class SubmissionRepository {
     try {
       return right(null);
     } catch (e) {
-      return left(Failure(message: e.toString()));
+      return left(getError(e));
     }
   }
 }

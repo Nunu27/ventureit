@@ -10,6 +10,18 @@ class OpenHours {
     required this.hours,
   });
 
+  bool isOpen() {
+    if (hours.lowerBound == hours.upperBound) return true;
+
+    final now = DateTime.now();
+    final hour = now.hour * 60 + now.minute;
+
+    return days.lowerBound <= now.weekday &&
+        days.upperBound >= now.weekday &&
+        hours.lowerBound <= hour &&
+        hours.upperBound >= hour;
+  }
+
   OpenHours copyWith({
     Range<int>? days,
     Range<TimeHour>? hours,
@@ -35,7 +47,9 @@ class OpenHours {
   }
 
   @override
-  String toString() => 'OpenHours(days: $days, hours: $hours)';
+  String toString() => hours.lowerBound == hours.lowerBound
+      ? '24 hours'
+      : '${hours.lowerBound.toString()}-${hours.upperBound.toString()}';
 
   @override
   bool operator ==(covariant OpenHours other) {

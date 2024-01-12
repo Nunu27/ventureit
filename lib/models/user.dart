@@ -4,9 +4,11 @@ class UserModel {
   final String id;
   final String avatar;
   final String email;
+  final String? name;
   final String username;
   final UserRole role;
   final int balance;
+  final String? fcmToken;
   final DateTime createdAt;
   final DateTime updatedAt;
 
@@ -14,9 +16,11 @@ class UserModel {
     required this.id,
     required this.avatar,
     required this.email,
+    this.name,
     required this.username,
     required this.role,
     required this.balance,
+    this.fcmToken,
     required this.createdAt,
     required this.updatedAt,
   });
@@ -25,10 +29,12 @@ class UserModel {
     String? id,
     String? avatar,
     String? email,
+    String? name,
     String? username,
     String? password,
     UserRole? role,
     int? balance,
+    String? fcmToken,
     DateTime? createdAt,
     DateTime? updatedAt,
   }) {
@@ -36,9 +42,11 @@ class UserModel {
       id: id ?? this.id,
       avatar: avatar ?? this.avatar,
       email: email ?? this.email,
+      name: name ?? this.name,
       username: username ?? this.username,
       role: role ?? this.role,
       balance: balance ?? this.balance,
+      fcmToken: fcmToken ?? this.fcmToken,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
     );
@@ -49,9 +57,11 @@ class UserModel {
       'id': id,
       'avatar': avatar,
       'email': email,
-      'fullName': username,
+      'name': name,
+      'username': username,
       'role': role.name,
       'balance': balance,
+      'fcmToken': fcmToken,
       'createdAt': createdAt.millisecondsSinceEpoch,
       'updatedAt': updatedAt.millisecondsSinceEpoch,
     };
@@ -62,9 +72,11 @@ class UserModel {
       id: map['id'] as String,
       avatar: map['avatar'] as String,
       email: map['email'] as String,
-      username: map['fullName'] as String,
+      name: map['name'] as String?,
+      username: map['username'] as String,
       role: UserRole.values.byName(map['role']),
       balance: map['balance'] as int,
+      fcmToken: map['fcmToken'] as String?,
       createdAt: DateTime.fromMillisecondsSinceEpoch(map['createdAt'] as int),
       updatedAt: DateTime.fromMillisecondsSinceEpoch(map['updatedAt'] as int),
     );
@@ -72,7 +84,7 @@ class UserModel {
 
   @override
   String toString() {
-    return 'UserModel(id: $id, avatar: $avatar, email: $email, username: $username, role: $role, balance: $balance, createdAt: $createdAt, updatedAt: $updatedAt)';
+    return 'UserModel(id: $id, avatar: $avatar, email: $email, name: $name, username: $username, role: $role, balance: $balance, fcmToken: $fcmToken, createdAt: $createdAt, updatedAt: $updatedAt)';
   }
 
   @override
@@ -82,9 +94,11 @@ class UserModel {
     return other.id == id &&
         other.avatar == avatar &&
         other.email == email &&
+        other.name == name &&
         other.username == username &&
         other.role == role &&
         other.balance == balance &&
+        other.fcmToken == fcmToken &&
         other.createdAt == createdAt &&
         other.updatedAt == updatedAt;
   }
@@ -94,9 +108,11 @@ class UserModel {
     return id.hashCode ^
         avatar.hashCode ^
         email.hashCode ^
+        name.hashCode ^
         username.hashCode ^
         role.hashCode ^
         balance.hashCode ^
+        fcmToken.hashCode ^
         createdAt.hashCode ^
         updatedAt.hashCode;
   }

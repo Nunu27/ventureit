@@ -1,21 +1,21 @@
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:routemaster/routemaster.dart';
 import 'package:ventureit/controllers/auth_controller.dart';
-import 'package:ventureit/controllers/user_controller.dart';
 import 'package:ventureit/firebase_options.dart';
-import 'package:ventureit/models/user.dart';
 import 'package:ventureit/router.dart';
+import 'package:ventureit/theme/color_schemes.dart';
 import 'package:ventureit/utils.dart';
-import 'package:ventureit/widgets/error_view.dart';
-import 'package:ventureit/widgets/loader.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
+  );
+  FirebaseFirestore.instance.settings = const Settings(
+    persistenceEnabled: false,
   );
   runApp(const ProviderScope(child: MainApp()));
 }
@@ -28,36 +28,40 @@ class MainApp extends ConsumerStatefulWidget {
 }
 
 class _MainAppState extends ConsumerState<MainApp> {
-  UserModel? userModel;
+  bool isLoading = true;
 
-  void getData(User data) async {
-    userModel =
-        await ref.read(userControllerProvider).getUserData(data.uid).first;
-    ref.read(userProvider.notifier).update((state) => userModel);
-    setState(() {});
+  void getUserData() async {
+    await ref.read(authControllerProvider.notifier).getCurrentUser();
+
+    setState(() {
+      isLoading = false;
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    getUserData();
   }
 
   @override
   Widget build(BuildContext context) {
-    return ref.watch(authStateChangeProvider).when(
-          data: (data) => MaterialApp.router(
-            debugShowCheckedModeBanner: false,
-            title: 'VentureIt',
-            scaffoldMessengerKey: snackbarKey,
-            routerDelegate: RoutemasterDelegate(
-              routesBuilder: (context) {
-                if (data != null) {
-                  getData(data);
-                  if (userModel != null) return loggedInRoute;
-                }
-
-                return loggedOutRoute;
-              },
-            ),
-            routeInformationParser: const RoutemasterParser(),
-          ),
-          error: (error, stackTrace) => ErrorView(error: error.toString()),
-          loading: () => const Loader(),
-        );
+    return MaterialApp.router(
+      debugShowCheckedModeBanner: false,
+      title: 'VentureIt',
+      theme: ThemeData(
+        useMaterial3: true,
+        colorScheme: lightColorScheme,
+      ),
+      darkTheme: ThemeData(
+        useMaterial3: true,
+        colorScheme: darkColorScheme,
+      ),
+      scaffoldMessengerKey: snackbarKey,
+      routerDelegate: RoutemasterDelegate(
+        routesBuilder: (context) => routes,
+      ),
+      routeInformationParser: const RoutemasterParser(),
+    );
   }
 }

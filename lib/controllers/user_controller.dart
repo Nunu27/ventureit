@@ -18,7 +18,7 @@ class UserController {
   UserController({required UserRepository repository})
       : _repository = repository;
 
-  Stream<UserModel> getUserData(id) {
+  Stream<UserModel?> getUserData(id) {
     return _repository.getUserData(id);
   }
 }

@@ -1,5 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:routemaster/routemaster.dart';
+import 'package:ventureit/controllers/user_controller.dart';
 import 'package:ventureit/models/user.dart';
 import 'package:ventureit/repositories/auth_repository.dart';
 import 'package:ventureit/utils.dart';
@@ -31,14 +34,27 @@ class AuthController extends StateNotifier<bool> {
 
   Stream<User?> get authStateChange => _repository.authChangeState;
 
-  void signUp({
+  Future<void> getCurrentUser() async {
+    final user = _repository.getCurrentUser();
+
+    if (user == null) return;
+
+    final res =
+        await _ref.read(userControllerProvider).getUserData(user.uid).first;
+    _ref.read(userProvider.notifier).update((state) => res);
+  }
+
+  void register({
+    required BuildContext context,
     required String email,
+    required String fullName,
     required String username,
     required String password,
   }) async {
     state = true;
-    final user = await _repository.signUp(
+    final user = await _repository.register(
       email: email,
+      fullName: fullName,
       username: username,
       password: password,
     );
@@ -46,47 +62,53 @@ class AuthController extends StateNotifier<bool> {
 
     user.fold(
       (l) => showSnackBar(l.message),
-      (r) => _ref.read(userProvider.notifier).update((state) => r),
+      (r) {
+        _ref.read(userProvider.notifier).update((state) => r);
+        Routemaster.of(context).replace(
+          r.role == UserRole.admin ? '/admin' : '/member',
+        );
+      },
     );
   }
 
-  void signIn({
+  void login({
+    required BuildContext context,
     required String email,
     required String password,
   }) async {
     state = true;
-    final user = await _repository.signIn(email: email, password: password);
+    final user = await _repository.login(email: email, password: password);
     state = false;
 
     user.fold(
       (l) => showSnackBar(l.message),
-      (r) => _ref.read(userProvider.notifier).update((state) => r),
+      (r) {
+        _ref.read(userProvider.notifier).update((state) => r);
+        Routemaster.of(context).replace(
+          r.role == UserRole.admin ? '/admin' : '/member',
+        );
+      },
     );
   }
 
-  void signInWithGoogle() async {
+  void loginWithGoogle(BuildContext context) async {
     state = true;
-    final user = await _repository.signInWithGoogle();
+    final user = await _repository.loginWithGoogle();
     state = false;
 
     user.fold(
       (l) => showSnackBar(l.message),
-      (r) => _ref.read(userProvider.notifier).update((state) => r),
+      (r) {
+        _ref.read(userProvider.notifier).update((state) => r);
+        Routemaster.of(context).replace(
+          r.role == UserRole.admin ? '/admin' : '/member',
+        );
+      },
     );
   }
 
-  void signOut() {
-    _repository.signOut();
-  }
-
-  void deleteAccount() async {
-    state = true;
-    final res = await _repository.deleteAccount();
-    state = false;
-
-    res.fold(
-      (l) => showSnackBar(l.message),
-      (r) => _ref.read(userProvider.notifier).update((state) => null),
-    );
+  void logOut() {
+    _repository.logOut();
+    _ref.read(userProvider.notifier).update((state) => null);
   }
 }
