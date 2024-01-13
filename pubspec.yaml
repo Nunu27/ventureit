@@ -7,6 +7,7 @@ environment:
   sdk: ">=3.2.3 <4.0.0"
 
 dependencies:
+  algolia: ^1.1.2
   cloud_firestore: ^4.14.0
   firebase_auth: ^4.16.0
   firebase_core: ^2.24.2
@@ -16,15 +17,15 @@ dependencies:
   flutter_riverpod: ^2.4.9
   fpdart: ^1.1.0
   geocoding: ^2.1.1
-  geoflutterfire2: ^2.3.15
   geolocator: ^10.1.0
   google_sign_in: ^6.2.1
   location: ^5.0.3
+  location_picker_flutter_map: ^1.1.0
   preload_page_view: ^0.2.0
   riverpod_annotation: ^2.3.3
   routemaster: ^1.0.1
   url_launcher: ^6.2.2
-  uuid: ^4.3.2
+  uuid: ^3.0.7
 
 dev_dependencies:
   flutter_test:

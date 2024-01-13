@@ -18,6 +18,7 @@ class ExploreScreen extends ConsumerStatefulWidget {
 }
 
 class _ExploreScreenState extends ConsumerState<ExploreScreen> {
+  int pageToLoad = 1;
   FilterOptions options = FilterOptions();
 
   void openFilter() async {
@@ -28,6 +29,7 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen> {
     if (newOptions != null) {
       setState(() {
         options = newOptions;
+        pageToLoad = 1;
       });
     }
   }
@@ -35,12 +37,14 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen> {
   void onSearchSubmit(String value) {
     setState(() {
       options = options.copyWith(keyword: value);
+      pageToLoad = 1;
     });
   }
 
   void selectCategory(BusinessCategory category) {
     setState(() {
       options = options.copyWith(category: category);
+      pageToLoad = 1;
     });
   }
 
@@ -140,16 +144,45 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen> {
           ),
         ),
       ),
-      body: ref.watch(filterBusinessProvider(options)).when(
-            data: (businesses) => businesses.isEmpty
+      body: ref.watch(paginatedFilterProvider(options)).when(
+            data: (pageData) => pageData.totalResults == 0
                 ? const Center(
                     child: Text('No result found'),
                   )
                 : ListView.builder(
-                    itemCount: businesses.length,
+                    itemCount: pageData.totalResults,
                     padding: const EdgeInsets.all(12),
-                    itemBuilder: (context, index) =>
-                        BusinessCard(business: businesses[index]),
+                    itemBuilder: (context, index) {
+                      final page = index ~/ 20;
+                      if (page > pageToLoad) return const SizedBox();
+
+                      final relativeIndex = index % 20;
+                      final isBorder = relativeIndex == 1;
+
+                      final currentBusinessDataFromIndex = ref
+                          .watch(
+                        paginatedFilterProvider(
+                          options.copyWith(page: page),
+                        ),
+                      )
+                          .whenData(
+                        (pageData) {
+                          if (pageToLoad == page && isBorder) pageToLoad++;
+                          return pageData.items[relativeIndex];
+                        },
+                      );
+
+                      return ProviderScope(
+                        overrides: [
+                          currentBusinessCardProvider
+                              .overrideWithValue(currentBusinessDataFromIndex)
+                        ],
+                        child: BusinessCard(
+                          isBorder: isBorder,
+                          openNow: options.openNow,
+                        ),
+                      );
+                    },
                   ),
             error: (error, stackTrace) {
               return ErrorView(error: error.toString());

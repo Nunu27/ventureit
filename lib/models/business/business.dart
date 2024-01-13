@@ -1,16 +1,14 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
-import 'package:geoflutterfire2/geoflutterfire2.dart';
-import 'package:geolocator/geolocator.dart';
+import 'package:ventureit/models/base_position.dart';
 
 import 'package:ventureit/models/business/business_content.dart';
+import 'package:ventureit/models/business/business_model.dart';
 import 'package:ventureit/models/business/business_product_item.dart';
 import 'package:ventureit/models/business/external_link.dart';
 import 'package:ventureit/models/open_hours.dart';
 import 'package:ventureit/models/range.dart';
-import 'package:ventureit/utils.dart';
 
 enum BusinessCategory {
   culinary('Culinary', Icons.food_bank),
@@ -28,11 +26,10 @@ enum BusinessCategory {
   final IconData icon;
 }
 
-class Business {
+class Business extends BusinessModel {
   final String id;
   final String name;
   final Placemark placemark;
-  final GeoFirePoint location;
   final String cover;
   final String? description;
   final String? phoneNumber;
@@ -40,7 +37,6 @@ class Business {
   final int ratedBy;
   final Range<int>? priceRange;
   final BusinessCategory category;
-  final List<OpenHours> openHours;
   final List<BusinessProductItem> products;
   final List<ExternalLink> externalLinks;
   final BusinessContent contents;
@@ -51,7 +47,7 @@ class Business {
     required this.id,
     required this.name,
     required this.placemark,
-    required this.location,
+    required super.location,
     required this.cover,
     required this.description,
     required this.phoneNumber,
@@ -59,7 +55,7 @@ class Business {
     required this.ratedBy,
     required this.priceRange,
     required this.category,
-    required this.openHours,
+    required super.openHours,
     required this.products,
     required this.externalLinks,
     required this.contents,
@@ -71,7 +67,7 @@ class Business {
     String? id,
     String? name,
     Placemark? placemark,
-    GeoFirePoint? location,
+    BasePosition? location,
     String? cover,
     String? description,
     String? phoneNumber,
@@ -107,36 +103,15 @@ class Business {
     );
   }
 
-  String getDistance(Position from) {
-    return formatDistance(
-      Geolocator.distanceBetween(
-        from.latitude,
-        from.longitude,
-        location.latitude,
-        location.longitude,
-      ),
-    );
-  }
-
-  OpenHours? getOpenHours() {
-    final now = DateTime.now();
-
-    for (var openHour in openHours) {
-      if (openHour.days.lowerBound <= now.weekday &&
-          openHour.days.upperBound >= now.weekday) {
-        return openHour;
-      }
-    }
-
-    return null;
-  }
-
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
       'id': id,
       'name': name,
       'placemark': placemark.toJson(),
-      'location': location.data,
+      'location': {
+        'latitude': location.latitude,
+        'longitude': location.longitude,
+      },
       'cover': cover,
       'description': description,
       'phoneNumber': phoneNumber,
@@ -154,16 +129,11 @@ class Business {
   }
 
   factory Business.fromMap(Map<String, dynamic> map) {
-    final geopoint = map['location']['geopoint'] as GeoPoint;
-
     return Business(
       id: map['id'] as String,
       name: map['name'] as String,
       placemark: Placemark.fromMap(map['placemark'] as Map<String, dynamic>),
-      location: GeoFirePoint(
-        geopoint.latitude,
-        geopoint.longitude,
-      ),
+      location: BasePosition.fromMap(map['location'] as Map<String, dynamic>),
       cover: map['cover'] as String,
       description:
           map['description'] != null ? map['description'] as String : null,

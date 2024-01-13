@@ -22,6 +22,7 @@ class _BottomTabsState extends ConsumerState<BottomTabs> {
     super.initState();
     SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
       ref.read(locationControllerProvider.notifier).getLocation();
+      waiting = false;
     });
   }
 
@@ -36,7 +37,6 @@ class _BottomTabsState extends ConsumerState<BottomTabs> {
     final tabPage = TabPage.of(context);
     final theme = Theme.of(context);
 
-    if (waiting && isLoading) waiting = false;
     if (!waiting && !isLoading && !isLoaded) isLoaded = true;
     if (location == null && isLoaded) {
       SchedulerBinding.instance.addPostFrameCallback((timeStamp) {

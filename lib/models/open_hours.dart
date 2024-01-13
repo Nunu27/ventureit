@@ -15,11 +15,14 @@ class OpenHours {
 
     final now = DateTime.now();
     final hour = now.hour * 60 + now.minute;
+    final from = hours.lowerBound.toMap();
+    final to = hours.upperBound.toMap();
 
     return days.lowerBound <= now.weekday &&
-        days.upperBound >= now.weekday &&
-        hours.lowerBound <= hour &&
-        hours.upperBound >= hour;
+            days.upperBound >= now.weekday &&
+            to < from
+        ? (hour <= from || hour >= to)
+        : (hour >= from && hour <= to);
   }
 
   OpenHours copyWith({
@@ -47,7 +50,7 @@ class OpenHours {
   }
 
   @override
-  String toString() => hours.lowerBound == hours.lowerBound
+  String toString() => hours.lowerBound == hours.upperBound
       ? '24 hours'
       : '${hours.lowerBound.toString()}-${hours.upperBound.toString()}';
 

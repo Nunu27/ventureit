@@ -1,15 +1,18 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
 
+import 'package:ventureit/constants/algolia_constants.dart';
 import 'package:ventureit/models/business/business.dart';
 
 enum SortBy {
-  rating('Rating'),
-  distance('Distance');
+  relevance('Relevance', AlgoliaConstants.businessIndex),
+  rating('Rating', AlgoliaConstants.businessIndexRating),
+  distance('Distance', AlgoliaConstants.businessIndexDistance);
 
-  const SortBy(this.name);
+  const SortBy(this.name, this.searchIndex);
 
   final String name;
+  final String searchIndex;
 }
 
 enum MinRating {
@@ -24,17 +27,17 @@ enum MinRating {
 }
 
 enum MaxDistance {
-  one('1 km', 1),
-  two('2 km', 2),
-  five('5 km', 5),
-  ten('10 km', 10),
-  twenty('20 km', 20),
-  fifty('50 km', 50);
+  one('1 km', 1000),
+  two('2 km', 2000),
+  five('5 km', 5000),
+  ten('10 km', 10000),
+  twenty('20 km', 20000),
+  fifty('50 km', 50000);
 
   const MaxDistance(this.name, this.value);
 
   final String name;
-  final double value;
+  final int value;
 }
 
 enum LastUpdated {
@@ -58,7 +61,8 @@ class FilterOptions {
   MaxDistance maxDistance;
   MinRating? minRating;
   LastUpdated? lastUpdated;
-  bool openNow = false;
+  bool openNow;
+  int page;
 
   FilterOptions({
     this.keyword = '',
@@ -67,6 +71,7 @@ class FilterOptions {
     this.maxDistance = MaxDistance.twenty,
     this.minRating,
     this.openNow = false,
+    this.page = 0,
   });
 
   void setKeyword(String value) {
@@ -120,6 +125,7 @@ class FilterOptions {
     MaxDistance? maxDistance,
     MinRating? minRating,
     bool? openNow,
+    int? page,
   }) {
     return FilterOptions(
       keyword: keyword ?? this.keyword,
@@ -128,6 +134,31 @@ class FilterOptions {
       maxDistance: maxDistance ?? this.maxDistance,
       minRating: minRating ?? this.minRating,
       openNow: openNow ?? this.openNow,
+      page: page ?? this.page,
     );
+  }
+
+  @override
+  bool operator ==(covariant FilterOptions other) {
+    if (identical(this, other)) return true;
+
+    return other.keyword == keyword &&
+        other.category == category &&
+        other.sortBy == sortBy &&
+        other.maxDistance == maxDistance &&
+        other.minRating == minRating &&
+        other.lastUpdated == lastUpdated &&
+        other.page == page;
+  }
+
+  @override
+  int get hashCode {
+    return keyword.hashCode ^
+        category.hashCode ^
+        sortBy.hashCode ^
+        maxDistance.hashCode ^
+        minRating.hashCode ^
+        lastUpdated.hashCode ^
+        page.hashCode;
   }
 }

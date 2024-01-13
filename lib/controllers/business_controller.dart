@@ -1,9 +1,8 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:geoflutterfire2/geoflutterfire2.dart';
 import 'package:ventureit/controllers/location_controller.dart';
-import 'package:ventureit/models/business/business.dart';
+import 'package:ventureit/models/business/business_basic.dart';
 import 'package:ventureit/models/filter_options.dart';
-import 'package:ventureit/providers/geo_provider.dart';
+import 'package:ventureit/models/paginated_response.dart';
 import 'package:ventureit/repositories/business_repository.dart';
 
 final businessControllerProvider = Provider((ref) {
@@ -13,10 +12,13 @@ final businessControllerProvider = Provider((ref) {
   );
 });
 
-final filterBusinessProvider =
-    StreamProvider.family((ref, FilterOptions options) {
-  return ref.watch(businessControllerProvider).filterBusinesses(options);
-});
+final paginatedFilterProvider =
+    FutureProvider.family<PaginatedResponse<BusinessBasic>, FilterOptions>(
+  (ref, FilterOptions options) async {
+    final businessController = ref.watch(businessControllerProvider);
+    return await businessController.filterBusinesses(options);
+  },
+);
 
 class BusinessController {
   final BusinessRepository _repository;
@@ -26,15 +28,10 @@ class BusinessController {
       : _repository = repository,
         _ref = ref;
 
-  Stream<List<Business>> filterBusinesses(FilterOptions options) {
+  Future<PaginatedResponse<BusinessBasic>> filterBusinesses(
+      FilterOptions options) async {
     final position = _ref.read(locationProvider)!.position;
-    final geo = _ref.read(geoProvider);
 
-    GeoFirePoint center = geo.point(
-      latitude: position.latitude,
-      longitude: position.longitude,
-    );
-
-    return _repository.filterBusinesses(options, geo, center);
+    return await _repository.filterBusinesses(options, position);
   }
 }

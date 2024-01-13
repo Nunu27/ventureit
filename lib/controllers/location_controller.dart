@@ -3,7 +3,7 @@ import 'package:ventureit/models/location.dart';
 import 'package:ventureit/repositories/location_repository.dart';
 import 'package:ventureit/utils.dart';
 
-final locationProvider = StateProvider<LocationData?>((ref) => null);
+final locationProvider = StateProvider<LocationModel?>((ref) => null);
 
 final locationControllerProvider =
     StateNotifierProvider<LocationController, bool>((ref) {
@@ -36,7 +36,7 @@ class LocationController extends StateNotifier<bool> {
         state = false;
 
         _ref.read(locationProvider.notifier).update(
-              (state) => LocationData(
+              (state) => LocationModel(
                 placemark: placemark,
                 position: position,
               ),

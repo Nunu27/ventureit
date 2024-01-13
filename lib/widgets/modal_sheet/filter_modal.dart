@@ -14,12 +14,20 @@ class FilterModal extends StatefulWidget {
 }
 
 class _FilterModalState extends State<FilterModal> {
+  late FilterOptions _options;
+
+  @override
+  void initState() {
+    _options = widget.options.copyWith();
+    super.initState();
+  }
+
   void closeModal() {
     Navigator.of(context, rootNavigator: true).pop();
   }
 
   void confirm() {
-    Navigator.of(context, rootNavigator: true).pop(widget.options);
+    Navigator.of(context, rootNavigator: true).pop(_options);
   }
 
   @override
@@ -50,8 +58,8 @@ class _FilterModalState extends State<FilterModal> {
                 children: BusinessCategory.values
                     .map(
                       (category) => FilterButton(
-                        isSelected: widget.options.category == category,
-                        onPress: () => widget.options.setCategory(
+                        isSelected: _options.category == category,
+                        onPress: () => _options.setCategory(
                           category,
                           setState: setState,
                         ),
@@ -67,8 +75,8 @@ class _FilterModalState extends State<FilterModal> {
                 children: SortBy.values
                     .map(
                       (sortBy) => FilterButton(
-                        isSelected: widget.options.sortBy == sortBy,
-                        onPress: () => widget.options.setSortBy(
+                        isSelected: _options.sortBy == sortBy,
+                        onPress: () => _options.setSortBy(
                           sortBy,
                           setState: setState,
                         ),
@@ -83,8 +91,8 @@ class _FilterModalState extends State<FilterModal> {
                 children: MinRating.values
                     .map(
                       (minRating) => FilterButton(
-                        isSelected: widget.options.minRating == minRating,
-                        onPress: () => widget.options.setMinRating(
+                        isSelected: _options.minRating == minRating,
+                        onPress: () => _options.setMinRating(
                           minRating,
                           setState: setState,
                         ),
@@ -102,8 +110,8 @@ class _FilterModalState extends State<FilterModal> {
                 children: MaxDistance.values
                     .map(
                       (maxDistance) => FilterButton(
-                        isSelected: widget.options.maxDistance == maxDistance,
-                        onPress: () => widget.options.setMaxDistance(
+                        isSelected: _options.maxDistance == maxDistance,
+                        onPress: () => _options.setMaxDistance(
                           maxDistance,
                           setState: setState,
                         ),
@@ -118,8 +126,8 @@ class _FilterModalState extends State<FilterModal> {
                 children: LastUpdated.values
                     .map(
                       (lastUpdated) => FilterButton(
-                        isSelected: widget.options.lastUpdated == lastUpdated,
-                        onPress: () => widget.options.setLastUpdated(
+                        isSelected: _options.lastUpdated == lastUpdated,
+                        onPress: () => _options.setLastUpdated(
                           lastUpdated,
                           setState: setState,
                         ),
@@ -133,16 +141,16 @@ class _FilterModalState extends State<FilterModal> {
               Wrap(
                 children: [
                   FilterButton(
-                    isSelected: widget.options.openNow,
-                    onPress: () => widget.options.setOpenNow(
+                    isSelected: _options.openNow,
+                    onPress: () => _options.setOpenNow(
                       true,
                       setState: setState,
                     ),
                     label: 'Yes',
                   ),
                   FilterButton(
-                    isSelected: !widget.options.openNow,
-                    onPress: () => widget.options.setOpenNow(
+                    isSelected: !_options.openNow,
+                    onPress: () => _options.setOpenNow(
                       false,
                       setState: setState,
                     ),
