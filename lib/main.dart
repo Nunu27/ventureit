@@ -7,7 +7,21 @@ import 'package:ventureit/controllers/auth_controller.dart';
 import 'package:ventureit/firebase_options.dart';
 import 'package:ventureit/router.dart';
 import 'package:ventureit/theme/color_schemes.dart';
-import 'package:ventureit/utils.dart';
+import 'package:ventureit/utils/utils.dart';
+
+final navigatorKey = GlobalKey<NavigatorState>();
+
+class MyBackButtonDispatcher extends RootBackButtonDispatcher {
+  @override
+  Future<bool> didPopRoute() async {
+    // Close any open modal
+    if (navigatorKey.currentState!.canPop()) {
+      navigatorKey.currentState!.pop();
+      return true;
+    }
+    return super.didPopRoute();
+  }
+}
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -58,7 +72,9 @@ class _MainAppState extends ConsumerState<MainApp> {
         colorScheme: darkColorScheme,
       ),
       scaffoldMessengerKey: snackbarKey,
+      backButtonDispatcher: MyBackButtonDispatcher(),
       routerDelegate: RoutemasterDelegate(
+        navigatorKey: navigatorKey,
         routesBuilder: (context) => routes,
       ),
       routeInformationParser: const RoutemasterParser(),

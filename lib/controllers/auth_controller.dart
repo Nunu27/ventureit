@@ -5,7 +5,7 @@ import 'package:routemaster/routemaster.dart';
 import 'package:ventureit/controllers/user_controller.dart';
 import 'package:ventureit/models/user.dart';
 import 'package:ventureit/repositories/auth_repository.dart';
-import 'package:ventureit/utils.dart';
+import 'package:ventureit/utils/utils.dart';
 
 final userProvider = StateProvider<UserModel?>((ref) => null);
 

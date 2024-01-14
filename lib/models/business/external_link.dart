@@ -8,9 +8,9 @@ enum LinkSite {
   tiktok('TikTok'),
   twitter('Twitter');
 
-  const LinkSite(this.name, {this.logo});
+  const LinkSite(this.source, {this.logo});
 
-  final String name;
+  final String source;
   final String? logo;
 }
 

@@ -6,6 +6,8 @@ import 'package:ventureit/models/submission/remove_submission.dart';
 
 enum SubmissionType { add, edit, remove, entry }
 
+enum SubmissionStatus { pending, approved, rejected }
+
 abstract class SubmissionData {
   final SubmissionType type;
 
@@ -32,14 +34,16 @@ class Submission {
   final String id;
   final String userId;
   final String? businessId;
-  final List<SubmissionData> submissionData;
+  final List<SubmissionData> data;
+  final SubmissionStatus status;
   final DateTime createdAt;
 
   Submission({
     required this.id,
     required this.userId,
     this.businessId,
-    required this.submissionData,
+    required this.data,
+    this.status = SubmissionStatus.pending,
     required this.createdAt,
   });
 
@@ -47,14 +51,16 @@ class Submission {
     String? id,
     String? userId,
     String? businessId,
-    List<SubmissionData>? submissionData,
+    List<SubmissionData>? data,
+    SubmissionStatus? status,
     DateTime? createdAt,
   }) {
     return Submission(
       id: id ?? this.id,
       userId: userId ?? this.userId,
       businessId: businessId ?? this.businessId,
-      submissionData: submissionData ?? this.submissionData,
+      data: data ?? this.data,
+      status: status ?? this.status,
       createdAt: createdAt ?? this.createdAt,
     );
   }
@@ -64,7 +70,8 @@ class Submission {
       'id': id,
       'userId': userId,
       'businessId': businessId,
-      'submissionData': submissionData.map((x) => x.toMap()).toList(),
+      'data': data.map((x) => x.toMap()).toList(),
+      'status': status.name,
       'createdAt': createdAt.millisecondsSinceEpoch,
     };
   }
@@ -75,18 +82,19 @@ class Submission {
       userId: map['userId'] as String,
       businessId:
           map['businessId'] != null ? map['businessId'] as String : null,
-      submissionData: List<SubmissionData>.from(
-        (map['submissionData'] as List<int>).map<SubmissionData>(
+      data: List<SubmissionData>.from(
+        (map['data'] as List<int>).map<SubmissionData>(
           (x) => SubmissionData.fromMap(x as Map<String, dynamic>),
         ),
       ),
+      status: SubmissionStatus.values.byName(map['status']),
       createdAt: DateTime.fromMillisecondsSinceEpoch(map['createdAt'] as int),
     );
   }
 
   @override
   String toString() {
-    return 'Submission(id: $id, userId: $userId, businessId: $businessId, submissionData: $submissionData, createdAt: $createdAt)';
+    return 'Submission(id: $id, userId: $userId, businessId: $businessId, data: $data, status: $status, createdAt: $createdAt)';
   }
 
   @override
@@ -96,7 +104,8 @@ class Submission {
     return other.id == id &&
         other.userId == userId &&
         other.businessId == businessId &&
-        listEquals(other.submissionData, submissionData) &&
+        listEquals(other.data, data) &&
+        other.status == status &&
         other.createdAt == createdAt;
   }
 
@@ -105,7 +114,8 @@ class Submission {
     return id.hashCode ^
         userId.hashCode ^
         businessId.hashCode ^
-        submissionData.hashCode ^
+        data.hashCode ^
+        status.hashCode ^
         createdAt.hashCode;
   }
 }

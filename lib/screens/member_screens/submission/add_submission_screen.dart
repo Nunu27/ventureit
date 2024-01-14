@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:preload_page_view/preload_page_view.dart';
 import 'package:ventureit/screens/member_screens/business/edit_business_screen.dart';
-import 'package:ventureit/utils.dart';
+import 'package:ventureit/utils/utils.dart';
 
 class AddSubmissionScreen extends ConsumerStatefulWidget {
   const AddSubmissionScreen({super.key});

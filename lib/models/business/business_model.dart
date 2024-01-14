@@ -1,7 +1,7 @@
 import 'package:geolocator/geolocator.dart';
 import 'package:ventureit/models/base_position.dart';
 import 'package:ventureit/models/open_hours.dart';
-import 'package:ventureit/utils.dart';
+import 'package:ventureit/utils/location_utils.dart';
 
 class BusinessModel {
   final BasePosition location;
@@ -14,7 +14,7 @@ class BusinessModel {
     this.distance,
   });
 
-  String getDistance(Position from) {
+  String getDistance(BasePosition from) {
     distance ??= formatDistance(
       Geolocator.distanceBetween(
         from.latitude,

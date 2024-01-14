@@ -4,7 +4,7 @@ import 'package:routemaster/routemaster.dart';
 import 'package:ventureit/constants/constants.dart';
 import 'package:ventureit/controllers/auth_controller.dart';
 import 'package:ventureit/models/user.dart';
-import 'package:ventureit/utils.dart';
+import 'package:ventureit/utils/utils.dart';
 
 class ProfileScreen extends ConsumerStatefulWidget {
   final bool isDashboard;

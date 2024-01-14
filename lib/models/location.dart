@@ -1,9 +1,9 @@
 import 'package:geocoding/geocoding.dart';
-import 'package:geolocator/geolocator.dart';
+import 'package:ventureit/models/base_position.dart';
 
 class LocationModel {
-  final Placemark placemark;
-  final Position position;
+  Placemark placemark;
+  final BasePosition position;
 
   LocationModel({
     required this.placemark,
@@ -12,7 +12,7 @@ class LocationModel {
 
   LocationModel copyWith({
     Placemark? placemark,
-    Position? position,
+    BasePosition? position,
   }) {
     return LocationModel(
       placemark: placemark ?? this.placemark,
@@ -33,9 +33,20 @@ class LocationModel {
   factory LocationModel.fromMap(Map<String, dynamic> map) {
     return LocationModel(
       placemark: Placemark.fromMap(map['placemark'] as Map<String, dynamic>),
-      position: Position.fromMap(map['position'] as Map<String, dynamic>),
+      position: BasePosition.fromMap(map['position'] as Map<String, dynamic>),
     );
   }
+
+  // factory LocationModel.fromPickedData(GeocodingResult data) {
+  //   print(data.addressComponents);
+
+  //   return LocationModel(
+  //     position: BasePosition(
+  //       latitude: data.geometry.location.lat,
+  //       longitude: data.geometry.location.lng,
+  //     ),
+  //   );
+  // }
 
   @override
   String toString() =>
