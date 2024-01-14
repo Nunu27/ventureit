@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:ventureit/utils.dart';
+import 'package:ventureit/utils/utils.dart';
 
 class MissionsScreen extends ConsumerStatefulWidget {
   const MissionsScreen({super.key});

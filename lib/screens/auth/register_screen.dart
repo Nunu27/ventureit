@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:routemaster/routemaster.dart';
 import 'package:ventureit/controllers/auth_controller.dart';
-import 'package:ventureit/utils.dart';
+import 'package:ventureit/utils/validation.dart';
 import 'package:ventureit/widgets/loader_overlay.dart';
 
 class RegisterScreen extends ConsumerStatefulWidget {

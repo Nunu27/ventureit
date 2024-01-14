@@ -1,17 +1,10 @@
-import 'dart:convert';
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:geocoding/geocoding.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:routemaster/routemaster.dart';
 import 'package:ventureit/models/failure.dart';
 
-Codec<String, String> base64Converter = utf8.fuse(base64);
 final GlobalKey<ScaffoldMessengerState> snackbarKey =
     GlobalKey<ScaffoldMessengerState>();
-final emailRegex = RegExp(r"^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$");
-
 bool isGuest() {
   final user = FirebaseAuth.instance.currentUser;
 
@@ -84,48 +77,6 @@ void checkGuest(BuildContext context) {
       useRootNavigator: false,
     );
   }
-}
-
-String? validateEmail(String? value) {
-  if (value!.isEmpty) return "Enter email!";
-  if (!emailRegex.hasMatch(value)) return "Please enter a valid email";
-  return null;
-}
-
-String? validateUsername(String? value) {
-  if (value!.isEmpty) return "Enter username!";
-  if (value.length < 5) return "Password need to be atleast 5 characters";
-  return null;
-}
-
-String? validatePassword(String? value) {
-  if (value!.isEmpty) return "Enter password!";
-  if (value.length < 6) return "Password need to be atleast 6 characters";
-  return null;
-}
-
-String convertToPrecisionString(double number, {int precision = 1}) {
-  String result = number.toStringAsFixed(precision);
-
-  if (precision == 0) {
-    result = result.replaceAll(RegExp(r'\.0*$'), '');
-  }
-
-  return result;
-}
-
-String formatDistance(double distance) {
-  if (distance >= 500) return '${convertToPrecisionString(distance / 1000)} km';
-  return '${distance.round()} m';
-}
-
-Future<Placemark> getPlacemark(Position position) async {
-  List<Placemark> placemarks = await placemarkFromCoordinates(
-    position.latitude,
-    position.longitude,
-  );
-
-  return placemarks.first;
 }
 
 Failure getError(Object e) {

@@ -1,7 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:ventureit/models/location.dart';
 import 'package:ventureit/repositories/location_repository.dart';
-import 'package:ventureit/utils.dart';
+import 'package:ventureit/utils/utils.dart';
 
 final locationProvider = StateProvider<LocationModel?>((ref) => null);
 
@@ -16,6 +16,7 @@ final locationControllerProvider =
 class LocationController extends StateNotifier<bool> {
   final LocationRepository _repository;
   final Ref _ref;
+  LocationModel? userLocation;
 
   LocationController({required LocationRepository repository, required Ref ref})
       : _repository = repository,
@@ -25,22 +26,13 @@ class LocationController extends StateNotifier<bool> {
   void getLocation({bool force = false}) async {
     state = true;
     final locationRes = await _repository.getLocation(force);
+    state = false;
 
     locationRes.fold(
-      (l) {
-        state = false;
-        showSnackBar(l.message);
-      },
-      (position) async {
-        final placemark = await getPlacemark(position);
-        state = false;
-
-        _ref.read(locationProvider.notifier).update(
-              (state) => LocationModel(
-                placemark: placemark,
-                position: position,
-              ),
-            );
+      (l) => showSnackBar(l.message),
+      (location) {
+        userLocation = location;
+        _ref.read(locationProvider.notifier).update((state) => location);
       },
     );
   }

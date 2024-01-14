@@ -1,10 +1,9 @@
+import 'package:ventureit/models/user_basic.dart';
+
 enum UserRole { member, admin }
 
-class UserModel {
-  final String id;
-  final String avatar;
+class UserModel extends UserBasic {
   final String email;
-  final String? name;
   final String username;
   final UserRole role;
   final int balance;
@@ -13,10 +12,10 @@ class UserModel {
   final DateTime updatedAt;
 
   UserModel({
-    required this.id,
-    required this.avatar,
+    required super.id,
+    required super.avatar,
     required this.email,
-    this.name,
+    required super.name,
     required this.username,
     required this.role,
     required this.balance,
@@ -25,6 +24,7 @@ class UserModel {
     required this.updatedAt,
   });
 
+  @override
   UserModel copyWith({
     String? id,
     String? avatar,
@@ -52,6 +52,7 @@ class UserModel {
     );
   }
 
+  @override
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
       'id': id,
@@ -67,12 +68,21 @@ class UserModel {
     };
   }
 
+  Map<String, dynamic> updateMap() {
+    return <String, dynamic>{
+      'avatar': avatar,
+      'name': name,
+      'username': username,
+      'updatedAt': DateTime.now().millisecondsSinceEpoch,
+    };
+  }
+
   factory UserModel.fromMap(Map<String, dynamic> map) {
     return UserModel(
       id: map['id'] as String,
       avatar: map['avatar'] as String,
       email: map['email'] as String,
-      name: map['name'] as String?,
+      name: map['name'] as String,
       username: map['username'] as String,
       role: UserRole.values.byName(map['role']),
       balance: map['balance'] as int,

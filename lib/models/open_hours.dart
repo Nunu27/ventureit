@@ -52,7 +52,7 @@ class OpenHours {
   @override
   String toString() => hours.lowerBound == hours.upperBound
       ? '24 hours'
-      : '${hours.lowerBound.toString()}-${hours.upperBound.toString()}';
+      : '${hours.lowerBound.toString()} - ${hours.upperBound.toString()}';
 
   @override
   bool operator ==(covariant OpenHours other) {

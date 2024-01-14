@@ -2,15 +2,18 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:location/location.dart' as loc;
+import 'package:ventureit/models/base_position.dart';
+import 'package:ventureit/models/location.dart';
 import 'package:ventureit/type_defs.dart';
-import 'package:ventureit/utils.dart';
+import 'package:ventureit/utils/location_utils.dart';
+import 'package:ventureit/utils/utils.dart';
 
 final locationRepositoryProvider = Provider((ref) {
   return LocationRepository();
 });
 
 class LocationRepository {
-  FutureEither<Position> getLocation(bool force) async {
+  FutureEither<LocationModel> getLocation(bool force) async {
     try {
       bool serviceEnabled;
       LocationPermission permission;
@@ -36,9 +39,17 @@ class LocationRepository {
         throw 'Location permissions are permanently denied, we cannot request permissions.';
       }
 
-      return right(await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.high,
-      ));
+      final position = BasePosition.fromPosition(
+        await Geolocator.getCurrentPosition(
+          desiredAccuracy: LocationAccuracy.high,
+        ),
+      );
+      final location = LocationModel(
+        placemark: await getPlacemark(position),
+        position: position,
+      );
+
+      return right(location);
     } catch (e) {
       return left(getError(e));
     }

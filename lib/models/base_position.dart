@@ -1,4 +1,5 @@
 import 'package:geolocator/geolocator.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class BasePosition {
   final double latitude;
@@ -30,6 +31,13 @@ class BasePosition {
     return BasePosition(
       latitude: map['latitude'] as double,
       longitude: map['longitude'] as double,
+    );
+  }
+
+  factory BasePosition.fromLatLng(LatLng position) {
+    return BasePosition(
+      latitude: position.latitude,
+      longitude: position.longitude,
     );
   }
 

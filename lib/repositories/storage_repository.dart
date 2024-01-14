@@ -5,7 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:ventureit/providers/firebase_provider.dart';
 import 'package:ventureit/type_defs.dart';
-import 'package:ventureit/utils.dart';
+import 'package:ventureit/utils/utils.dart';
 
 final storageRepositoryProvider = Provider((ref) {
   return StorageRepository(storage: ref.watch(storageProvider));

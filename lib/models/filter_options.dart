@@ -1,4 +1,3 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
 
 import 'package:ventureit/constants/algolia_constants.dart';
@@ -46,7 +45,7 @@ enum LastUpdated {
   months('1 month', Duration(days: 30)),
   threeMonths('3 months', Duration(days: 90));
 
-  DateTime get lastDate => DateTime.now().subtract(duration);
+  int get lastDate => DateTime.now().subtract(duration).millisecondsSinceEpoch;
 
   const LastUpdated(this.name, this.duration);
 
@@ -62,7 +61,6 @@ class FilterOptions {
   MinRating? minRating;
   LastUpdated? lastUpdated;
   bool openNow;
-  int page;
 
   FilterOptions({
     this.keyword = '',
@@ -71,7 +69,6 @@ class FilterOptions {
     this.maxDistance = MaxDistance.twenty,
     this.minRating,
     this.openNow = false,
-    this.page = 0,
   });
 
   void setKeyword(String value) {
@@ -125,7 +122,6 @@ class FilterOptions {
     MaxDistance? maxDistance,
     MinRating? minRating,
     bool? openNow,
-    int? page,
   }) {
     return FilterOptions(
       keyword: keyword ?? this.keyword,
@@ -134,7 +130,6 @@ class FilterOptions {
       maxDistance: maxDistance ?? this.maxDistance,
       minRating: minRating ?? this.minRating,
       openNow: openNow ?? this.openNow,
-      page: page ?? this.page,
     );
   }
 
@@ -147,8 +142,7 @@ class FilterOptions {
         other.sortBy == sortBy &&
         other.maxDistance == maxDistance &&
         other.minRating == minRating &&
-        other.lastUpdated == lastUpdated &&
-        other.page == page;
+        other.lastUpdated == lastUpdated;
   }
 
   @override
@@ -158,7 +152,6 @@ class FilterOptions {
         sortBy.hashCode ^
         maxDistance.hashCode ^
         minRating.hashCode ^
-        lastUpdated.hashCode ^
-        page.hashCode;
+        lastUpdated.hashCode;
   }
 }

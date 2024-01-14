@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:ventureit/constants/constants.dart';
 import 'package:ventureit/controllers/business_controller.dart';
 import 'package:ventureit/controllers/modal_controller.dart';
 import 'package:ventureit/models/business/business.dart';
 import 'package:ventureit/models/filter_options.dart';
+import 'package:ventureit/models/paginated_options.dart';
 import 'package:ventureit/widgets/cards/business_card.dart';
+import 'package:ventureit/widgets/end_of_list.dart';
 import 'package:ventureit/widgets/error_view.dart';
 import 'package:ventureit/widgets/filter_button.dart';
 import 'package:ventureit/widgets/loader.dart';
@@ -144,25 +147,31 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen> {
           ),
         ),
       ),
-      body: ref.watch(paginatedFilterProvider(options)).when(
+      body: ref
+          .watch(paginatedFilterProvider(
+              PaginatedOptions(data: options, offset: 0)))
+          .when(
             data: (pageData) => pageData.totalResults == 0
                 ? const Center(
                     child: Text('No result found'),
                   )
                 : ListView.builder(
-                    itemCount: pageData.totalResults,
+                    itemCount: pageData.totalResults + 1,
                     padding: const EdgeInsets.all(12),
                     itemBuilder: (context, index) {
-                      final page = index ~/ 20;
+                      final page = index ~/ Constants.dataPerPage;
                       if (page > pageToLoad) return const SizedBox();
+                      if (index == pageData.totalResults) {
+                        return const EndOfList();
+                      }
 
-                      final relativeIndex = index % 20;
+                      final relativeIndex = index % Constants.dataPerPage;
                       final isBorder = relativeIndex == 1;
 
                       final currentBusinessDataFromIndex = ref
                           .watch(
                         paginatedFilterProvider(
-                          options.copyWith(page: page),
+                          PaginatedOptions(data: options, offset: page),
                         ),
                       )
                           .whenData(

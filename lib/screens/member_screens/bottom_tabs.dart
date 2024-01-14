@@ -27,7 +27,7 @@ class _BottomTabsState extends ConsumerState<BottomTabs> {
   }
 
   void showLocationPickerSheet() async {
-    ref.read(modalControllerProvider).showLocationPickerSheet(context);
+    ref.read(modalControllerProvider).showLocationSheet(context);
   }
 
   @override

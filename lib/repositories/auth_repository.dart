@@ -7,7 +7,7 @@ import 'package:ventureit/models/user.dart';
 import 'package:ventureit/providers/firebase_provider.dart';
 import 'package:ventureit/repositories/user_repository.dart';
 import 'package:ventureit/type_defs.dart';
-import 'package:ventureit/utils.dart';
+import 'package:ventureit/utils/utils.dart';
 
 final authRepositoryProvider = Provider((ref) {
   return AuthRepository(
@@ -125,7 +125,7 @@ class AuthRepository {
           id: userCredential.user!.uid,
           avatar: userCredential.user!.photoURL ?? Constants.defaultAvatar,
           email: userCredential.user!.email!,
-          name: userCredential.user!.displayName,
+          name: userCredential.user!.displayName ?? Constants.defaultName,
           username: 'user$count',
           role: UserRole.member,
           balance: 0,

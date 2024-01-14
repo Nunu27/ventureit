@@ -1,35 +1,31 @@
 import 'package:algolia/algolia.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:geolocator/geolocator.dart';
+import 'package:ventureit/constants/constants.dart';
 import 'package:ventureit/constants/firestore_constants.dart';
+import 'package:ventureit/models/base_position.dart';
 import 'package:ventureit/models/business/business.dart';
 import 'package:ventureit/models/business/business_basic.dart';
 import 'package:ventureit/models/filter_options.dart';
 import 'package:ventureit/models/paginated_response.dart';
 import 'package:ventureit/providers/algolia_provider.dart';
 import 'package:ventureit/providers/firebase_provider.dart';
-import 'package:ventureit/repositories/storage_repository.dart';
 
 final businessRepositoryProvider = Provider((ref) {
   return BusinessRepository(
     firestore: ref.watch(firestoreProvider),
-    storageRepository: ref.watch(storageRepositoryProvider),
     ref: ref,
   );
 });
 
 class BusinessRepository {
   final FirebaseFirestore _firestore;
-  final StorageRepository _storageRepository;
   final Ref _ref;
 
   BusinessRepository({
     required FirebaseFirestore firestore,
-    required StorageRepository storageRepository,
     required Ref ref,
   })  : _firestore = firestore,
-        _storageRepository = storageRepository,
         _ref = ref;
 
   CollectionReference get _businesses =>
@@ -42,9 +38,17 @@ class BusinessRepository {
         .map((event) => Business.fromMap(event.data() as Map<String, dynamic>));
   }
 
+  Stream<Business> getBusinessById(String id) {
+    return _businesses
+        .doc(id)
+        .snapshots()
+        .map((event) => Business.fromMap(event.data() as Map<String, dynamic>));
+  }
+
   Future<PaginatedResponse<BusinessBasic>> filterBusinesses(
     FilterOptions options,
-    Position position,
+    int page,
+    BasePosition position,
   ) async {
     String filters = 'category:${options.category.name}';
 
@@ -66,7 +70,7 @@ class BusinessRepository {
       query = query.query(options.keyword);
     }
 
-    query = query.setHitsPerPage(15).setPage(options.page);
+    query = query.setHitsPerPage(Constants.dataPerPage).setPage(page);
 
     final snapshot = await query.getObjects();
 

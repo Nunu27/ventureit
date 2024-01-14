@@ -24,7 +24,7 @@ final routes = RouteMap(
     '/register': (_) => const MaterialPage(child: RegisterScreen()),
     '/member': (_) => const TabPage(
           child: BottomTabs(),
-          paths: ['/member/explore', '/member/missions', '/member/profile'],
+          paths: ['explore', 'missions', 'profile'],
         ),
     '/member/explore': (_) => const MaterialPage(child: ExploreScreen()),
     '/member/missions': (_) => const MaterialPage(child: MissionsScreen()),
@@ -67,7 +67,7 @@ final routes = RouteMap(
         const MaterialPage(child: EditBusinessScreen()),
     '/admin': (_) => const TabPage(
           child: Dashboard(),
-          paths: ['/admin/submissions', '/admin/profile'],
+          paths: ['submissions', 'profile'],
         ),
     '/admin/submissions': (_) => const MaterialPage(
           child: SubmissionsScreen(),

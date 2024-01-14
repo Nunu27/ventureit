@@ -6,6 +6,7 @@ import 'package:ventureit/controllers/location_controller.dart';
 import 'package:ventureit/models/business/business_basic.dart';
 import 'package:ventureit/widgets/error_view.dart';
 import 'package:ventureit/widgets/loader.dart';
+import 'package:ventureit/widgets/remote_image.dart';
 
 final currentBusinessCardProvider = Provider<AsyncValue<BusinessBasic>>((ref) {
   throw UnimplementedError();
@@ -47,17 +48,8 @@ class BusinessCard extends ConsumerWidget {
                     children: [
                       ClipRRect(
                         borderRadius: BorderRadius.circular(8),
-                        child: FadeInImage.assetNetwork(
-                          imageErrorBuilder: (context, error, stackTrace) {
-                            return Image.asset(
-                              "assets/images/image_placeholder.jpg",
-                              fit: BoxFit.cover,
-                              height: 80,
-                              width: 80,
-                            );
-                          },
-                          image: business.cover,
-                          placeholder: 'assets/images/image_placeholder.jpg',
+                        child: RemoteImage(
+                          url: business.cover,
                           fit: BoxFit.cover,
                           height: 80,
                           width: 80,
