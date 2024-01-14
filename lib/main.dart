@@ -51,10 +51,12 @@ class _MainAppState extends ConsumerState<MainApp> {
       title: 'VentureIt',
       theme: ThemeData(
         useMaterial3: true,
+        fontFamily: "PlusJakartaSans",
         colorScheme: lightColorScheme,
       ),
       darkTheme: ThemeData(
         useMaterial3: true,
+        fontFamily: "PlusJakartaSans",
         colorScheme: darkColorScheme,
       ),
       scaffoldMessengerKey: snackbarKey,

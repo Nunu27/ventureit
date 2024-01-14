@@ -1,5 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:ventureit/controllers/location_controller.dart';
+import 'package:ventureit/models/business/business.dart';
 import 'package:ventureit/models/business/business_basic.dart';
 import 'package:ventureit/models/filter_options.dart';
 import 'package:ventureit/models/paginated_response.dart';
@@ -10,6 +11,10 @@ final businessControllerProvider = Provider((ref) {
     repository: ref.watch(businessRepositoryProvider),
     ref: ref,
   );
+});
+
+final getBusinessByIdProvider = StreamProvider.family((ref, String id) {
+  return ref.watch(businessControllerProvider).getBusinessById(id);
 });
 
 final paginatedFilterProvider =
@@ -27,6 +32,10 @@ class BusinessController {
   BusinessController({required BusinessRepository repository, required Ref ref})
       : _repository = repository,
         _ref = ref;
+
+  Stream<Business> getBusinessById(String id) {
+    return _repository.getBusinessById(id);
+  }
 
   Future<PaginatedResponse<BusinessBasic>> filterBusinesses(
       FilterOptions options) async {

@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:ventureit/constants/firestore_constants.dart';
+import 'package:ventureit/models/business/business.dart';
 import 'package:ventureit/models/business/business_basic.dart';
 import 'package:ventureit/models/filter_options.dart';
 import 'package:ventureit/models/paginated_response.dart';
@@ -33,6 +34,13 @@ class BusinessRepository {
 
   CollectionReference get _businesses =>
       _firestore.collection(FirestoreConstants.businessCollection);
+
+  Stream<Business> getBusinessById(String id) {
+    return _businesses
+        .doc(id)
+        .snapshots()
+        .map((event) => Business.fromMap(event.data() as Map<String, dynamic>));
+  }
 
   Future<PaginatedResponse<BusinessBasic>> filterBusinesses(
     FilterOptions options,

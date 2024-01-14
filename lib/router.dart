@@ -15,6 +15,8 @@ import 'package:ventureit/screens/member_screens/submission/add_submission_scree
 import 'package:ventureit/screens/member_screens/submission/my_submissions_screen.dart';
 import 'package:ventureit/screens/member_screens/submission/submission_manual_screen.dart';
 
+String? businessId;
+
 final routes = RouteMap(
   onUnknownRoute: (path) => const Redirect('/member'),
   routes: {
@@ -35,8 +37,32 @@ final routes = RouteMap(
         const MaterialPage(child: MySubmissionsScreen()),
     '/member/add-submission': (_) =>
         const MaterialPage(child: AddSubmissionScreen()),
-    '/member/business/:id': (route) =>
-        const MaterialPage(child: BusinessScreen()),
+    '/member/business/:id': (route) {
+      final id = route.pathParameters['id'];
+      if (id != null) businessId = id;
+
+      return TabPage(
+          child: BusinessScreen(
+            businessId: businessId!,
+          ),
+          paths: const [
+            'products',
+            'reviews',
+            'gallery',
+            'details',
+            'contents'
+          ]);
+    },
+    '/member/business/:id/products': (_) =>
+        const MaterialPage(child: EditBusinessScreen()),
+    '/member/business/:id/reviews': (_) =>
+        const MaterialPage(child: EditBusinessScreen()),
+    '/member/business/:id/gallery': (_) =>
+        const MaterialPage(child: EditBusinessScreen()),
+    '/member/business/:id/details': (_) =>
+        const MaterialPage(child: EditBusinessScreen()),
+    '/member/business/:id/contents': (_) =>
+        const MaterialPage(child: EditBusinessScreen()),
     '/member/business/:id/edit': (_) =>
         const MaterialPage(child: EditBusinessScreen()),
     '/admin': (_) => const TabPage(
