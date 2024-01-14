@@ -38,13 +38,6 @@ class BusinessRepository {
         .map((event) => Business.fromMap(event.data() as Map<String, dynamic>));
   }
 
-  Stream<Business> getBusinessById(String id) {
-    return _businesses
-        .doc(id)
-        .snapshots()
-        .map((event) => Business.fromMap(event.data() as Map<String, dynamic>));
-  }
-
   Future<PaginatedResponse<BusinessBasic>> filterBusinesses(
     FilterOptions options,
     int page,

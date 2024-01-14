@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:routemaster/routemaster.dart';
-import 'package:ventureit/constants/constants.dart';
 import 'package:ventureit/controllers/location_controller.dart';
 import 'package:ventureit/models/business/business_basic.dart';
 import 'package:ventureit/widgets/error_view.dart';

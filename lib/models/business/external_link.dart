@@ -1,17 +1,17 @@
 enum LinkSite {
   website('Website'),
   gmaps('Google Maps'),
-  whatsapp('WhatsApp'),
+  whatsapp('WhatsApp', logo: 'assets/images/whatsapp.png'),
   linktree('LinkTree'),
-  instagram('Instagram'),
+  instagram('Instagram', logo: 'assets/images/instagram.png'),
   gofood('GoFood'),
-  tiktok('TikTok'),
-  twitter('Twitter');
+  tiktok('TikTok', logo: 'assets/images/tiktok.png'),
+  twitter('Twitter', logo: 'assets/images/x.png');
 
-  const LinkSite(this.source, {this.logo});
+  const LinkSite(this.source, {this.logo = 'assets/images/instagram.png'});
 
   final String source;
-  final String? logo;
+  final String logo;
 }
 
 class ExternalLink {

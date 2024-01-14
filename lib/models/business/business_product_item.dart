@@ -1,28 +1,26 @@
-import 'package:flutter/foundation.dart';
-
 class BusinessProductItem {
   final String name;
   final int price;
-  final List<String> pictures;
+  final String picture;
   final DateTime updatedAt;
 
   BusinessProductItem({
     required this.name,
     required this.price,
-    required this.pictures,
+    required this.picture,
     required this.updatedAt,
   });
 
   BusinessProductItem copyWith({
     String? name,
     int? price,
-    List<String>? pictures,
+    String? picture,
     DateTime? updatedAt,
   }) {
     return BusinessProductItem(
       name: name ?? this.name,
       price: price ?? this.price,
-      pictures: pictures ?? this.pictures,
+      picture: picture ?? this.picture,
       updatedAt: updatedAt ?? this.updatedAt,
     );
   }
@@ -31,7 +29,7 @@ class BusinessProductItem {
     return <String, dynamic>{
       'name': name,
       'price': price,
-      'pictures': pictures,
+      'picture': picture,
       'updatedAt': updatedAt.millisecondsSinceEpoch,
     };
   }
@@ -40,14 +38,14 @@ class BusinessProductItem {
     return BusinessProductItem(
       name: map['name'] as String,
       price: map['price'] as int,
-      pictures: List<String>.from(map['pictures']),
+      picture: map['picture'] as String,
       updatedAt: DateTime.fromMillisecondsSinceEpoch(map['updatedAt'] as int),
     );
   }
 
   @override
   String toString() {
-    return 'BusinessMenuItem(name: $name, price: $price, pictures: $pictures, updatedAt: $updatedAt)';
+    return 'BusinessMenuItem(name: $name, price: $price, picture: $picture, updatedAt: $updatedAt)';
   }
 
   @override
@@ -56,7 +54,7 @@ class BusinessProductItem {
 
     return other.name == name &&
         other.price == price &&
-        listEquals(other.pictures, pictures) &&
+        other.picture == picture &&
         other.updatedAt == updatedAt;
   }
 
@@ -64,7 +62,7 @@ class BusinessProductItem {
   int get hashCode {
     return name.hashCode ^
         price.hashCode ^
-        pictures.hashCode ^
+        picture.hashCode ^
         updatedAt.hashCode;
   }
 }

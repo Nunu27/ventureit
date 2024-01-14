@@ -208,7 +208,6 @@ class _BusinessScreenState extends ConsumerState<BusinessScreen> {
                 ),
                 body: TabBarView(
                   controller: tabPage.controller,
-                  physics: const NeverScrollableScrollPhysics(),
                   children: [
                     for (final stack in tabPage.stacks)
                       PageStackNavigator(stack: stack),

@@ -6,7 +6,12 @@ import 'package:ventureit/screens/auth/login_screen.dart';
 import 'package:ventureit/screens/auth/register_screen.dart';
 import 'package:ventureit/screens/member_screens/bottom_tabs.dart';
 import 'package:ventureit/screens/member_screens/business/business_screen.dart';
+import 'package:ventureit/screens/member_screens/business/contents_screen.dart';
+import 'package:ventureit/screens/member_screens/business/details_screen.dart';
 import 'package:ventureit/screens/member_screens/business/edit_business_screen.dart';
+import 'package:ventureit/screens/member_screens/business/gallery_screen.dart';
+import 'package:ventureit/screens/member_screens/business/products_screen.dart';
+import 'package:ventureit/screens/member_screens/business/reviews_screen.dart';
 import 'package:ventureit/screens/member_screens/explore_screen.dart';
 import 'package:ventureit/screens/member_screens/missions_screen.dart';
 import 'package:ventureit/screens/member_screens/profile/edit_profile_screen.dart';
@@ -53,16 +58,16 @@ final routes = RouteMap(
             'contents'
           ]);
     },
-    '/member/business/:id/products': (_) =>
-        const MaterialPage(child: EditBusinessScreen()),
-    '/member/business/:id/reviews': (_) =>
-        const MaterialPage(child: EditBusinessScreen()),
-    '/member/business/:id/gallery': (_) =>
-        const MaterialPage(child: EditBusinessScreen()),
-    '/member/business/:id/details': (_) =>
-        const MaterialPage(child: EditBusinessScreen()),
-    '/member/business/:id/contents': (_) =>
-        const MaterialPage(child: EditBusinessScreen()),
+    '/member/business/:id/products': (route) =>
+        MaterialPage(child: ProductsScreen(id: route.pathParameters['id']!)),
+    '/member/business/:id/reviews': (route) =>
+        MaterialPage(child: ReviewsScreen(id: route.pathParameters['id']!)),
+    '/member/business/:id/gallery': (route) =>
+        MaterialPage(child: GalleryScreen(id: route.pathParameters['id']!)),
+    '/member/business/:id/details': (route) =>
+        MaterialPage(child: DetailsScreen(id: route.pathParameters['id']!)),
+    '/member/business/:id/contents': (route) =>
+        MaterialPage(child: ContentsScreen(id: route.pathParameters['id']!)),
     '/member/business/:id/edit': (_) =>
         const MaterialPage(child: EditBusinessScreen()),
     '/admin': (_) => const TabPage(
