@@ -6,10 +6,13 @@ import 'package:ventureit/screens/auth/login_screen.dart';
 import 'package:ventureit/screens/auth/register_screen.dart';
 import 'package:ventureit/screens/member_screens/bottom_tabs.dart';
 import 'package:ventureit/screens/member_screens/business/business_screen.dart';
+import 'package:ventureit/screens/member_screens/business/content_edit_business_screen.dart';
 import 'package:ventureit/screens/member_screens/business/contents_screen.dart';
 import 'package:ventureit/screens/member_screens/business/details_screen.dart';
 import 'package:ventureit/screens/member_screens/business/edit_business_screen.dart';
 import 'package:ventureit/screens/member_screens/business/gallery_screen.dart';
+import 'package:ventureit/screens/member_screens/business/general_edit_business_screen.dart';
+import 'package:ventureit/screens/member_screens/business/products_edit_business_screen.dart';
 import 'package:ventureit/screens/member_screens/business/products_screen.dart';
 import 'package:ventureit/screens/member_screens/business/reviews_screen.dart';
 import 'package:ventureit/screens/member_screens/explore_screen.dart';
@@ -68,8 +71,30 @@ final routes = RouteMap(
         MaterialPage(child: DetailsScreen(id: route.pathParameters['id']!)),
     '/member/business/:id/contents': (route) =>
         MaterialPage(child: ContentsScreen(id: route.pathParameters['id']!)),
-    '/member/business/:id/edit': (_) =>
-        const MaterialPage(child: EditBusinessScreen()),
+    '/member/business/:id/edit': (route) {
+      final id = route.pathParameters['id'];
+      if (id != null) businessId = id;
+
+      return TabPage(
+        child: EditBusinessScreen(
+          businessId: businessId!,
+        ),
+        paths: const [
+          'general',
+          'products',
+          'content',
+        ],
+      );
+    },
+    '/member/business/:id/edit/general': (route) => MaterialPage(
+          child: GeneralEditBusiness(id: route.pathParameters['id']!),
+        ),
+    '/member/business/:id/edit/products': (route) => MaterialPage(
+          child: ProductsEditBusiness(id: route.pathParameters['id']!),
+        ),
+    '/member/business/:id/edit/content': (route) => MaterialPage(
+          child: ContentEditBusiness(id: route.pathParameters['id']!),
+        ),
     '/admin': (_) => const TabPage(
           child: Dashboard(),
           paths: ['submissions', 'profile'],

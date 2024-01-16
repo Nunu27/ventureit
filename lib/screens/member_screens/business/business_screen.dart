@@ -3,6 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:routemaster/routemaster.dart';
 import 'package:ventureit/controllers/business_controller.dart';
 import 'package:ventureit/controllers/location_controller.dart';
+import 'package:ventureit/router.dart';
+import 'package:ventureit/screens/member_screens/business/edit_business_screen.dart';
 import 'package:ventureit/widgets/error_view.dart';
 import 'package:ventureit/widgets/loader.dart';
 
@@ -34,11 +36,19 @@ class _BusinessScreenState extends ConsumerState<BusinessScreen> {
                 backgroundColor: theme.colorScheme.primaryContainer,
                 actions: [
                   PopupMenuButton(
+                    onSelected: (value) {
+                      if (value == "edit") {
+                        Routemaster.of(context)
+                            .push("/member/business/${business.id}/edit");
+                      }
+                    },
                     itemBuilder: (BuildContext context) => <PopupMenuEntry>[
                       const PopupMenuItem(
+                        value: "promote",
                         child: Text('Promote'),
                       ),
                       const PopupMenuItem(
+                        value: "edit",
                         child: Text('Edit data'),
                       ),
                     ],
