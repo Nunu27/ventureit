@@ -5,9 +5,9 @@ import 'package:ventureit/models/user_basic.dart';
 class Review {
   final String id;
   final String businessId;
-  final int rating;
+  final double rating;
   final List<String> mediaList;
-  final String description;
+  final String? description;
   final int voteCount;
   final List<String> upvotes;
   final List<String> downvotes;
@@ -32,7 +32,7 @@ class Review {
   Review copyWith({
     String? id,
     String? businessId,
-    int? rating,
+    double? rating,
     List<String>? mediaList,
     String? description,
     int? voteCount,
@@ -88,7 +88,7 @@ class Review {
       'rating': rating,
       'mediaList': mediaList,
       'description': description,
-      'updatedAt': updatedAt.millisecondsSinceEpoch,
+      'updatedAt': DateTime.now().millisecondsSinceEpoch,
     };
   }
 
@@ -96,9 +96,9 @@ class Review {
     return Review(
       id: map['id'] as String,
       businessId: map['businessId'] as String,
-      rating: map['rating'] as int,
+      rating: map['rating'] as double,
       mediaList: List<String>.from(map['mediaList']),
-      description: map['description'] as String,
+      description: map['description'] as String?,
       voteCount: map['voteCount'] as int,
       upvotes: List<String>.from(map['upvotes']),
       downvotes: List<String>.from(map['downvotes']),

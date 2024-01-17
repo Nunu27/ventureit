@@ -21,6 +21,7 @@ bool isGuest() {
   final user = FirebaseAuth.instance.currentUser;
 
   if (user == null) return true;
+  user.reload();
   return false;
 }
 
@@ -129,14 +130,19 @@ void openUrl(String url) async {
   }
 }
 
+int getNumber(String str) {
+  return int.parse(str.replaceAll(RegExp(r'[^\d]'), ''));
+}
+
 Failure getError(Object e) {
   if (e is FirebaseAuthException) {
     return Failure(message: e.message!);
   } else if (e is FirebaseException) {
     return Failure(message: e.message!);
   }
+  print(e);
 
-  return Failure(message: e.toString());
+  return Failure(message: 'Something went wrong');
 }
 
 String padTime(int num) {

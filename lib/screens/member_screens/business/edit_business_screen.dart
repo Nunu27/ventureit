@@ -42,7 +42,6 @@ class _EditBusinessScreenState extends ConsumerState<EditBusinessScreen> {
         ],
         bottom: TabBar(
           controller: tabPage.controller,
-          isScrollable: true,
           tabs: const [
             Tab(
               text: 'General',
@@ -58,6 +57,7 @@ class _EditBusinessScreenState extends ConsumerState<EditBusinessScreen> {
       ),
       body: TabBarView(
         controller: tabPage.controller,
+        physics: const NeverScrollableScrollPhysics(),
         children: [
           for (final stack in tabPage.stacks) PageStackNavigator(stack: stack),
         ],

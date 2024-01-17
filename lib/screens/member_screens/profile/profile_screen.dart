@@ -1,10 +1,13 @@
+import 'package:currency_text_input_formatter/currency_text_input_formatter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:routemaster/routemaster.dart';
 import 'package:ventureit/constants/constants.dart';
 import 'package:ventureit/controllers/auth_controller.dart';
+import 'package:ventureit/controllers/user_controller.dart';
 import 'package:ventureit/models/user.dart';
 import 'package:ventureit/utils/utils.dart';
+import 'package:ventureit/widgets/primary_button.dart';
 
 class ProfileScreen extends ConsumerStatefulWidget {
   final bool isDashboard;
@@ -16,6 +19,14 @@ class ProfileScreen extends ConsumerStatefulWidget {
 }
 
 class _ProfileScreenState extends ConsumerState<ProfileScreen> {
+  final TextEditingController topupController = TextEditingController();
+
+  @override
+  void dispose() {
+    topupController.dispose();
+    super.dispose();
+  }
+
   void logOut(BuildContext context, WidgetRef ref) {
     showConfirmationDialog(
       context: context,
@@ -30,27 +41,27 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
     );
   }
 
-  void navigateToMemberArea(BuildContext context) {
+  void navigateToMemberArea() {
     Routemaster.of(context).replace('/member');
   }
 
-  void navigateToDashboard(BuildContext context) {
+  void navigateToDashboard() {
     Routemaster.of(context).replace('/admin');
   }
 
-  void navigateToEditProfile(BuildContext context, WidgetRef ref) {
+  void navigateToEditProfile() {
     Routemaster.of(context).push('/member/edit-profile');
   }
 
-  void navigateToAddSubmission(BuildContext context, WidgetRef ref) {
+  void navigateToAddSubmission() {
     Routemaster.of(context).push('/member/add-submission');
   }
 
-  void navigateToSubmissionManual(BuildContext context) {
+  void navigateToSubmissionManual() {
     Routemaster.of(context).push('/member/submission-manual');
   }
 
-  void navigateToMySubmissions(BuildContext context, WidgetRef ref) {
+  void navigateToMySubmissions() {
     Routemaster.of(context).push('/member/my-submissions');
   }
 
@@ -60,6 +71,46 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
     WidgetsBinding.instance.addPostFrameCallback(
       (_) => checkGuest(context),
     );
+  }
+
+  void topUpSubmit() {
+    final num = topupController.text;
+    topupController.clear();
+    Navigator.of(context, rootNavigator: true).pop(getNumber(num));
+  }
+
+  void topUp() async {
+    modalShown = true;
+    final res = await showDialog(
+      context: context,
+      useRootNavigator: true,
+      builder: (context) => AlertDialog(
+        title: const Text('Top up'),
+        content: TextField(
+          controller: topupController,
+          keyboardType: TextInputType.number,
+          inputFormatters: [
+            CurrencyTextInputFormatter(
+              locale: 'id',
+              decimalDigits: 0,
+              symbol: 'Rp. ',
+            ),
+          ],
+        ),
+        actions: [
+          PrimaryButton(
+            onPress: topUpSubmit,
+            child: const Text('Confirm'),
+          )
+        ],
+      ),
+    );
+    modalShown = false;
+
+    if (res == null) return;
+    ref
+        .read(userControllerProvider.notifier)
+        .updateBalance(ref.read(userProvider)!.id, res);
   }
 
   @override
@@ -81,7 +132,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
       body: Column(
         children: [
           InkWell(
-            onTap: () => navigateToEditProfile(context, ref),
+            onTap: navigateToEditProfile,
             child: Padding(
               padding: const EdgeInsets.all(18.0),
               child: Row(
@@ -97,7 +148,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          user.username,
+                          user.name,
                           style: const TextStyle(
                               fontWeight: FontWeight.bold, fontSize: 18),
                         ),
@@ -117,35 +168,36 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
             children: widget.isDashboard
                 ? ([
                     ListTile(
-                      onTap: () => navigateToMemberArea(context),
+                      onTap: navigateToMemberArea,
                       leading: const Icon(Icons.dashboard),
                       title: const Text('Member area'),
                     )
                   ])
                 : ([
                     ListTile(
-                      onTap: () => navigateToDashboard(context),
+                      onTap: topUp,
                       leading: const Icon(Icons.wallet),
-                      title: const Text('Rp. 0'),
+                      title: Text(
+                          'Rp. ${numberFormatter.format(user?.balance ?? 0)}'),
                     ),
                     if (user?.role == UserRole.admin)
                       ListTile(
-                        onTap: () => navigateToDashboard(context),
+                        onTap: navigateToDashboard,
                         leading: const Icon(Icons.dashboard),
                         title: const Text('Dashboard'),
                       ),
                     ListTile(
-                      onTap: () => navigateToAddSubmission(context, ref),
+                      onTap: navigateToAddSubmission,
                       leading: const Icon(Icons.add_box),
                       title: const Text('Add business data'),
                     ),
                     ListTile(
-                      onTap: () => navigateToSubmissionManual(context),
+                      onTap: navigateToSubmissionManual,
                       leading: const Icon(Icons.book),
                       title: const Text('Submission manual'),
                     ),
                     ListTile(
-                      onTap: () => navigateToMySubmissions(context, ref),
+                      onTap: navigateToMySubmissions,
                       leading: const Icon(Icons.my_library_books),
                       title: const Text('My submissions'),
                     ),

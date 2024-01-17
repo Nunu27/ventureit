@@ -1,219 +1,88 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:ventureit/constants/constants.dart';
+import 'package:ventureit/controllers/modal_controller.dart';
+import 'package:ventureit/controllers/review_controller.dart';
 import 'package:ventureit/models/review.dart';
-import 'package:ventureit/models/user_basic.dart';
-import 'package:ventureit/widgets/remote_image.dart';
-
-final dummyReviews = [
-  Review(
-    id: '',
-    businessId: '',
-    rating: 4,
-    mediaList: [
-      'https://p16-sign-va.tiktokcdn.com/obj/tos-maliva-p-0068/8b4b2f09a1c641cab28b46db40476ad1_1693058936?x-expires=1705413600&x-signature=KIKHCPlOj45aWBkSg%2BGSq4Fk39E%3D',
-      'https://p16-sign-va.tiktokcdn.com/obj/tos-maliva-p-0068/8b4b2f09a1c641cab28b46db40476ad1_1693058936?x-expires=1705413600&x-signature=KIKHCPlOj45aWBkSg%2BGSq4Fk39E%3D',
-      'https://p16-sign-va.tiktokcdn.com/obj/tos-maliva-p-0068/8b4b2f09a1c641cab28b46db40476ad1_1693058936?x-expires=1705413600&x-signature=KIKHCPlOj45aWBkSg%2BGSq4Fk39E%3D',
-      'https://p16-sign-va.tiktokcdn.com/obj/tos-maliva-p-0068/8b4b2f09a1c641cab28b46db40476ad1_1693058936?x-expires=1705413600&x-signature=KIKHCPlOj45aWBkSg%2BGSq4Fk39E%3D',
-      'https://p16-sign-va.tiktokcdn.com/obj/tos-maliva-p-0068/8b4b2f09a1c641cab28b46db40476ad1_1693058936?x-expires=1705413600&x-signature=KIKHCPlOj45aWBkSg%2BGSq4Fk39E%3D',
-      'https://p16-sign-va.tiktokcdn.com/obj/tos-maliva-p-0068/8b4b2f09a1c641cab28b46db40476ad1_1693058936?x-expires=1705413600&x-signature=KIKHCPlOj45aWBkSg%2BGSq4Fk39E%3D',
-      'https://p16-sign-va.tiktokcdn.com/obj/tos-maliva-p-0068/8b4b2f09a1c641cab28b46db40476ad1_1693058936?x-expires=1705413600&x-signature=KIKHCPlOj45aWBkSg%2BGSq4Fk39E%3D',
-      'https://p16-sign-va.tiktokcdn.com/obj/tos-maliva-p-0068/8b4b2f09a1c641cab28b46db40476ad1_1693058936?x-expires=1705413600&x-signature=KIKHCPlOj45aWBkSg%2BGSq4Fk39E%3D',
-      'https://p16-sign-va.tiktokcdn.com/obj/tos-maliva-p-0068/8b4b2f09a1c641cab28b46db40476ad1_1693058936?x-expires=1705413600&x-signature=KIKHCPlOj45aWBkSg%2BGSq4Fk39E%3D',
-    ],
-    description: 'Mantap bet',
-    voteCount: 4,
-    upvotes: [],
-    downvotes: [],
-    author: UserBasic(id: '', avatar: Constants.defaultAvatar, name: 'Fris'),
-    createdAt: DateTime.now(),
-    updatedAt: DateTime.now(),
-  ),
-  Review(
-    id: '',
-    businessId: '',
-    rating: 4,
-    mediaList: [],
-    description: 'rill',
-    voteCount: 4,
-    upvotes: [],
-    downvotes: [],
-    author: UserBasic(id: '', avatar: Constants.defaultAvatar, name: 'Ana'),
-    createdAt: DateTime.now(),
-    updatedAt: DateTime.now(),
-  )
-];
+import 'package:ventureit/widgets/cards/review_card.dart';
+import 'package:ventureit/widgets/error_view.dart';
+import 'package:ventureit/widgets/loader.dart';
+import 'package:ventureit/widgets/rating.dart';
 
 class ReviewsScreen extends ConsumerWidget {
   final String id;
   const ReviewsScreen({super.key, required this.id});
 
+  void showReviewModal(
+      BuildContext context, WidgetRef ref, Review? oldReview) async {
+    await ref
+        .read(modalControllerProvider)
+        .showReviewModal(context, id, oldReview);
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
 
-    return Column(children: [
-      Expanded(
-        child: ListView.builder(
-          physics: const NeverScrollableScrollPhysics(),
-          itemCount: dummyReviews.length,
-          itemBuilder: (context, index) {
-            final review = dummyReviews[index];
-
-            return Padding(
-              padding: const EdgeInsets.all(18),
-              child: Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 18, vertical: 10),
-                decoration: BoxDecoration(
-                    color: theme.colorScheme.primaryContainer,
-                    borderRadius: BorderRadius.circular(8)),
-                child: Column(
-                  children: [
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Row(
-                                children: [
-                                  SizedBox(
-                                    height: 28,
-                                    width: 28,
-                                    child: CircleAvatar(
-                                      backgroundImage:
-                                          NetworkImage(review.author.avatar),
-                                      radius: 8,
-                                    ),
-                                  ),
-                                  const SizedBox(
-                                    width: 8,
-                                  ),
-                                  Text(
-                                    review.author.name,
-                                    style: TextStyle(
-                                      fontSize: 12,
-                                      color:
-                                          theme.colorScheme.onPrimaryContainer,
-                                    ),
-                                  ),
-                                  const SizedBox(
-                                    width: 8,
-                                  ),
-                                  Text(
-                                    '3 days ago',
-                                    style: TextStyle(
-                                      fontSize: 10,
-                                      color: theme
-                                          .colorScheme.onPrimaryContainer
-                                          .withAlpha(153),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              const SizedBox(
-                                height: 14,
-                              ),
-                              Text(
-                                review.description,
-                                style: TextStyle(
-                                  color: theme.colorScheme.onPrimaryContainer,
-                                  fontSize: 12,
-                                ),
-                              ),
-                            ],
+    return ref.watch(getUserReviewProvider(id)).when(
+          data: (myReview) => Column(children: [
+            Expanded(
+              child: ref.watch(getReviewsByBusinessIdProvider(id)).when(
+                    data: (reviews) => myReview == null && reviews.isEmpty
+                        ? const Center(child: Text('No reviews'))
+                        : ListView.builder(
+                            physics: const NeverScrollableScrollPhysics(),
+                            itemCount: myReview == null
+                                ? reviews.length
+                                : reviews.length + 1,
+                            itemBuilder: (context, index) => myReview == null
+                                ? ReviewCard(review: reviews[index])
+                                : ReviewCard(
+                                    review: index == 0
+                                        ? myReview
+                                        : reviews[index - 1]),
                           ),
-                        ),
-                        Column(
-                          children: [
-                            IconButton(
-                              visualDensity: VisualDensity.compact,
-                              onPressed: () {},
-                              icon: Icon(
-                                Icons.arrow_upward,
-                                size: 24,
-                                color: theme.colorScheme.onPrimaryContainer,
-                              ),
-                            ),
-                            Text(
-                              review.voteCount.toString(),
-                              style: TextStyle(
-                                fontSize: 12,
-                                color: theme.colorScheme.onPrimaryContainer,
-                              ),
-                            ),
-                            IconButton(
-                              visualDensity: VisualDensity.compact,
-                              onPressed: () {},
-                              icon: Icon(
-                                Icons.arrow_downward,
-                                color: theme.colorScheme.onPrimaryContainer,
-                              ),
-                            )
-                          ],
-                        )
-                      ],
-                    ),
-                    if (review.mediaList.isNotEmpty)
-                      SizedBox(
-                        height: 99,
-                        child: ListView.builder(
-                          scrollDirection: Axis.horizontal,
-                          itemCount: review.mediaList.length,
-                          itemBuilder: (context, index) => Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 2),
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(5),
-                              child: RemoteImage(
-                                url: review.mediaList[index],
-                                height: 99,
-                                width: 99,
-                                fit: BoxFit.cover,
-                              ),
-                            ),
+                    error: (error, stackTrace) =>
+                        ErrorView(error: error.toString()),
+                    loading: () => const Loader(),
+                  ),
+            ),
+            GestureDetector(
+              onTap: () => showReviewModal(context, ref, myReview),
+              behavior: HitTestBehavior.opaque,
+              child: Container(
+                  decoration: BoxDecoration(
+                    color: theme.colorScheme.primaryContainer,
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  margin: const EdgeInsets.all(18),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 18, vertical: 12),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Expanded(
+                        child: Text(
+                          myReview?.description ?? "Let's add a review here",
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                            fontSize: 12,
+                            color: theme.colorScheme.onPrimaryContainer,
                           ),
                         ),
                       ),
-                  ],
-                ),
-              ),
-            );
-          },
-        ),
-      ),
-      Container(
-        decoration: BoxDecoration(
-          color: theme.colorScheme.background,
-        ),
-        padding: EdgeInsets.all(18),
-        child: TextField(
-          decoration: InputDecoration(
-            filled: true,
-            hintText: "Let's add a review here",
-            hintStyle: TextStyle(
-              fontSize: 12,
-              fontWeight: FontWeight.normal,
-              color: theme.colorScheme.onPrimaryContainer,
-            ),
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8),
-              borderSide: BorderSide(
-                width: 0,
-                style: BorderStyle.none,
-              ),
-            ),
-            fillColor: theme.colorScheme.primaryContainer,
-            isDense: true,
-            suffixIcon: Icon(
-              Icons.send,
-              color: theme.colorScheme.onPrimaryContainer,
-              size: 24,
-            ),
-          ),
-        ),
-      )
-    ]);
+                      if (myReview != null) Rating(myReview.rating),
+                      Icon(
+                        Icons.chevron_right,
+                        color: theme.colorScheme.onPrimaryContainer,
+                        size: 24,
+                      ),
+                    ],
+                  )),
+            )
+          ]),
+          error: (error, stackTrace) => ErrorView(error: error.toString()),
+          loading: () => const Loader(),
+        );
   }
 }

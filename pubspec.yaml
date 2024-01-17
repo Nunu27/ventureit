@@ -24,7 +24,6 @@ dependencies:
   flutter_riverpod: ^2.4.9
   flutter_staggered_grid_view: ^0.7.0
   fpdart: ^1.1.0
-  galleryimage: ^2.0.1
   geocoding: ^2.1.1
   geolocator: ^10.1.0
   google_maps_flutter: ^2.5.3
@@ -33,6 +32,7 @@ dependencies:
   location: ^5.0.3
   riverpod_annotation: ^2.3.3
   routemaster: ^1.0.1
+  swipe_image_gallery: ^0.8.3
   time_range_picker: ^2.2.0
   timeago: ^3.2.2
   url_launcher: ^6.2.2

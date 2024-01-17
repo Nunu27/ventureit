@@ -21,8 +21,10 @@ class Range<T> {
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
-      'lowerBound': lowerBound,
-      'upperBound': upperBound,
+      'lowerBound':
+          T == TimeHour ? (lowerBound as TimeHour).toMap() : lowerBound,
+      'upperBound':
+          T == TimeHour ? (upperBound as TimeHour).toMap() : upperBound,
     };
   }
 
