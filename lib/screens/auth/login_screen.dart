@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:routemaster/routemaster.dart';
 import 'package:ventureit/controllers/auth_controller.dart';
 import 'package:ventureit/utils/validation.dart';
+import 'package:ventureit/widgets/input/input_form.dart';
 import 'package:ventureit/widgets/loader_overlay.dart';
 import 'package:ventureit/widgets/primary_button.dart';
+import 'package:ventureit/widgets/secondary_button.dart';
 
 class LogInScreen extends ConsumerStatefulWidget {
   const LogInScreen({super.key});
@@ -51,105 +54,154 @@ class _LogInScreenState extends ConsumerState<LogInScreen> {
   @override
   Widget build(BuildContext context) {
     final isLoading = ref.watch(authControllerProvider);
+    final theme = Theme.of(context);
+    final availableHeight = MediaQuery.of(context).size.height -
+        MediaQuery.of(context).padding.top -
+        MediaQuery.of(context).padding.bottom;
 
     return Scaffold(
       body: LoaderOverlay(
         isLoading: isLoading,
         child: SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Form(
-              key: _form,
-              child: Column(
-                children: [
-                  const Text('VentureIt'),
-                  const SizedBox(height: 30),
-                  TextFormField(
-                    keyboardType: TextInputType.emailAddress,
-                    controller: emailController,
-                    decoration: const InputDecoration(
-                      labelText: 'Email',
-                      border: OutlineInputBorder(),
-                      prefixIcon: Icon(Icons.email),
+          child: SingleChildScrollView(
+            child: Container(
+              padding: const EdgeInsets.all(16.0),
+              height: availableHeight,
+              child: Form(
+                key: _form,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Image.asset(
+                          "assets/images/logo.png",
+                          height: 64,
+                        ),
+                        const SizedBox(
+                          width: 12,
+                        ),
+                        Text(
+                          "Venture",
+                          style: TextStyle(
+                            color: theme.colorScheme.primary,
+                            fontSize: 36,
+                          ),
+                        ),
+                        Text(
+                          "It",
+                          style: TextStyle(
+                            fontSize: 36,
+                            color: theme.colorScheme.onBackground,
+                          ),
+                        )
+                      ],
                     ),
-                    validator: validateEmail,
-                  ),
-                  const SizedBox(height: 10),
-                  TextFormField(
-                    controller: passwordController,
-                    obscureText: passwordLocked,
-                    decoration: InputDecoration(
-                      labelText: 'Password',
-                      border: const OutlineInputBorder(),
-                      prefixIcon: const Icon(Icons.lock),
-                      suffix: InkWell(
-                        onTap: () => setState(() {
+                    const SizedBox(
+                      height: 18,
+                    ),
+                    const Text(
+                      "Promote your business, Discover your favorite things, Let your journey begins!",
+                      textAlign: TextAlign.center,
+                    ),
+                    const SizedBox(
+                      height: 45,
+                    ),
+                    InputForm(
+                      controller: emailController,
+                      keyboardType: TextInputType.emailAddress,
+                      hintText: "Email",
+                      validator: validateEmail,
+                    ),
+                    const SizedBox(height: 14),
+                    InputForm(
+                      validator: validatePassword,
+                      controller: passwordController,
+                      obscureText: passwordLocked,
+                      hintText: "Password",
+                      suffixIcon: IconButton(
+                        onPressed: () => setState(() {
                           passwordLocked = !passwordLocked;
                         }),
-                        child: Icon(
+                        icon: Icon(
                           passwordLocked
                               ? Icons.visibility
                               : Icons.visibility_off,
                         ),
                       ),
                     ),
-                    validator: validatePassword,
-                  ),
-                  const SizedBox(height: 20),
-                  PrimaryButton(
-                    onPress: logIn,
-                    child: const Text('Login'),
-                  ),
-                  const Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      Expanded(
-                        child: Padding(
-                          padding: EdgeInsets.all(20),
-                          child: Divider(),
+                    const SizedBox(
+                      height: 14,
+                    ),
+                    PrimaryButton(
+                      onPress: logIn,
+                      child: const Text('Login'),
+                    ),
+                    const Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        Expanded(
+                          child: Padding(
+                            padding: EdgeInsets.all(20),
+                            child: Divider(),
+                          ),
                         ),
+                        Text('or'),
+                        Expanded(
+                          child: Padding(
+                            padding: EdgeInsets.all(20),
+                            child: Divider(),
+                          ),
+                        ),
+                      ],
+                    ),
+                    SecondaryButton(
+                      onPressed: logInWithGoogle,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          SizedBox(
+                            height: 24,
+                            width: 24,
+                            child: Image.asset(
+                                "assets/images/site_logo/google.png"),
+                          ),
+                          const SizedBox(
+                            width: 8,
+                          ),
+                          const Text("Login with Google")
+                        ],
                       ),
-                      Text('or'),
-                      Expanded(
-                        child: Padding(
-                          padding: EdgeInsets.all(20),
-                          child: Divider(),
-                        ),
+                    ),
+                    const SizedBox(
+                      height: 14,
+                    ),
+                    SecondaryButton(
+                      onPressed: continueAsGuest,
+                      child: const Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text("Continue as guest"),
+                        ],
                       ),
-                    ],
-                  ),
-                  ElevatedButton(
-                    onPressed: logInWithGoogle,
-                    style: ElevatedButton.styleFrom(
-                        minimumSize: const Size(double.infinity, 50),
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(5))),
-                    child: const Text('Continue with Google'),
-                  ),
-                  const SizedBox(height: 10),
-                  ElevatedButton(
-                    onPressed: continueAsGuest,
-                    style: ElevatedButton.styleFrom(
-                        minimumSize: const Size(double.infinity, 50),
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(5))),
-                    child: const Text('Continue as Guest'),
-                  ),
-                  const SizedBox(height: 50),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const Text("Don't have an account yet? "),
-                      GestureDetector(
-                        onTap: navigateToRegister,
-                        child: const Text(
-                          'Register',
-                          style: TextStyle(color: Colors.blue),
-                        ),
-                      )
-                    ],
-                  ),
-                ],
+                    ),
+                    const SizedBox(height: 45),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Text("Don't have an account yet? "),
+                        GestureDetector(
+                          onTap: navigateToRegister,
+                          child: const Text(
+                            'Register',
+                            style: TextStyle(color: Colors.blue),
+                          ),
+                        )
+                      ],
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
