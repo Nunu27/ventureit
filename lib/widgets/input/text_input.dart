@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:ventureit/widgets/input/input_form.dart';
 
 class CustomTextForm extends StatelessWidget {
   final TextEditingController? controller;
@@ -25,8 +26,6 @@ class CustomTextForm extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 7),
       child: Column(
@@ -37,26 +36,13 @@ class CustomTextForm extends StatelessWidget {
             style: const TextStyle(fontSize: 16),
           ),
           const SizedBox(height: 8),
-          TextFormField(
+          InputForm(
             controller: controller,
-            style: const TextStyle(fontSize: 12),
-            maxLength: maxLength,
             maxLines: maxLines,
-            validator: validator,
+            maxLength: maxLength,
+            hintText: placeholder,
             inputFormatters: inputFormatters,
-            decoration: InputDecoration(
-              hintText: placeholder,
-              filled: true,
-              fillColor: theme.colorScheme.surfaceVariant,
-              isDense: true,
-              contentPadding:
-                  const EdgeInsets.symmetric(horizontal: 18, vertical: 10),
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(18),
-                borderSide: BorderSide.none,
-              ),
-            ),
-          )
+          ),
         ],
       ),
     );

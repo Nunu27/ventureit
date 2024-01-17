@@ -3,7 +3,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:routemaster/routemaster.dart';
 import 'package:ventureit/controllers/auth_controller.dart';
 import 'package:ventureit/utils/validation.dart';
+import 'package:ventureit/widgets/input/input_form.dart';
 import 'package:ventureit/widgets/loader_overlay.dart';
+import 'package:ventureit/widgets/primary_button.dart';
 
 class RegisterScreen extends ConsumerStatefulWidget {
   const RegisterScreen({super.key});
@@ -20,6 +22,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
   final passwordController = TextEditingController();
   final passwordConfirmationController = TextEditingController();
   bool passwordLocked = true;
+  bool validateLocked = true;
 
   @override
   void dispose() {
@@ -61,115 +64,133 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
   @override
   Widget build(BuildContext context) {
     final isLoading = ref.watch(authControllerProvider);
+    final theme = Theme.of(context);
+    final availableHeight = MediaQuery.of(context).size.height -
+        MediaQuery.of(context).padding.top -
+        MediaQuery.of(context).padding.bottom;
 
     return Scaffold(
       body: LoaderOverlay(
         isLoading: isLoading,
         child: SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Form(
-              key: _form,
-              child: Column(
-                children: [
-                  const Text('VentureIt'),
-                  const SizedBox(height: 30),
-                  TextFormField(
-                    keyboardType: TextInputType.emailAddress,
-                    controller: emailController,
-                    decoration: const InputDecoration(
-                      labelText: 'Email',
-                      border: OutlineInputBorder(),
-                      prefixIcon: Icon(Icons.email),
+          child: SingleChildScrollView(
+            child: Container(
+              padding: const EdgeInsets.all(16.0),
+              height: availableHeight,
+              child: Form(
+                key: _form,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Image.asset(
+                          "assets/images/logo.png",
+                          height: 64,
+                        ),
+                        const SizedBox(
+                          width: 12,
+                        ),
+                        Text(
+                          "Venture",
+                          style: TextStyle(
+                            color: theme.colorScheme.primary,
+                            fontSize: 36,
+                          ),
+                        ),
+                        Text(
+                          "It",
+                          style: TextStyle(
+                            fontSize: 36,
+                            color: theme.colorScheme.onBackground,
+                          ),
+                        )
+                      ],
                     ),
-                    validator: validateEmail,
-                  ),
-                  const SizedBox(height: 10),
-                  TextFormField(
-                    controller: fullNameController,
-                    decoration: const InputDecoration(
-                      labelText: 'Full Name',
-                      border: OutlineInputBorder(),
-                      prefixIcon: Icon(Icons.person),
+                    const SizedBox(
+                      height: 18,
                     ),
-                    validator: validateUsername,
-                  ),
-                  const SizedBox(height: 10),
-                  TextFormField(
-                    controller: usernameController,
-                    decoration: const InputDecoration(
-                      labelText: 'Username',
-                      border: OutlineInputBorder(),
-                      prefixIcon: Icon(Icons.person),
+                    const Text(
+                      "Promote your business, Discover your favorite things, Let your journey begins!",
+                      textAlign: TextAlign.center,
                     ),
-                    validator: validateUsername,
-                  ),
-                  const SizedBox(height: 10),
-                  TextFormField(
-                    controller: passwordController,
-                    obscureText: passwordLocked,
-                    decoration: InputDecoration(
-                      labelText: 'Password',
-                      border: const OutlineInputBorder(),
-                      prefixIcon: const Icon(Icons.lock),
-                      suffix: InkWell(
-                        onTap: () => setState(() {
+                    const SizedBox(
+                      height: 45,
+                    ),
+                    InputForm(
+                      controller: emailController,
+                      validator: validateEmail,
+                      hintText: "Email",
+                    ),
+                    const SizedBox(height: 14),
+                    InputForm(
+                      controller: fullNameController,
+                      validator: validateUsername,
+                      hintText: "Full name",
+                    ),
+                    const SizedBox(height: 14),
+                    InputForm(
+                      controller: usernameController,
+                      validator: validateUsername,
+                      hintText: "Username",
+                    ),
+                    const SizedBox(height: 14),
+                    InputForm(
+                      controller: passwordController,
+                      obscureText: passwordLocked,
+                      validator: validatePassword,
+                      hintText: "Password",
+                      suffixIcon: IconButton(
+                        onPressed: () => setState(() {
                           passwordLocked = !passwordLocked;
                         }),
-                        child: Icon(
-                          passwordLocked
-                              ? Icons.visibility
-                              : Icons.visibility_off,
-                        ),
+                        icon: Icon(passwordLocked
+                            ? Icons.visibility
+                            : Icons.visibility_off),
                       ),
                     ),
-                    validator: validatePassword,
-                  ),
-                  const SizedBox(height: 10),
-                  TextFormField(
-                    controller: passwordConfirmationController,
-                    obscureText: passwordLocked,
-                    decoration: InputDecoration(
-                      labelText: 'Password Confirmation',
-                      border: const OutlineInputBorder(),
-                      prefixIcon: const Icon(Icons.lock),
-                      suffix: InkWell(
-                        onTap: () => setState(() {
-                          passwordLocked = !passwordLocked;
+                    const SizedBox(height: 14),
+                    InputForm(
+                      controller: passwordConfirmationController,
+                      obscureText: validateLocked,
+                      validator: validateConfirmation,
+                      hintText: "Confirm password",
+                      suffixIcon: IconButton(
+                        onPressed: () => setState(() {
+                          validateLocked = !validateLocked;
                         }),
-                        child: Icon(
-                          passwordLocked
-                              ? Icons.visibility
-                              : Icons.visibility_off,
-                        ),
+                        icon: Icon(validateLocked
+                            ? Icons.visibility
+                            : Icons.visibility_off),
                       ),
                     ),
-                    validator: validateConfirmation,
-                  ),
-                  const SizedBox(height: 20),
-                  ElevatedButton(
-                    onPressed: register,
-                    style: ElevatedButton.styleFrom(
-                        minimumSize: const Size(double.infinity, 50),
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(5))),
-                    child: const Text('Register'),
-                  ),
-                  const SizedBox(height: 20),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const Text("Already have an account? "),
-                      GestureDetector(
-                        onTap: navigateToLogin,
-                        child: const Text(
-                          'Login',
-                          style: TextStyle(color: Colors.blue),
-                        ),
-                      )
-                    ],
-                  ),
-                ],
+                    const SizedBox(height: 14),
+                    PrimaryButton(
+                      onPress: register,
+                      child: const Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text("Register"),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 45),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Text("Already have an account? "),
+                        GestureDetector(
+                          onTap: navigateToLogin,
+                          child: const Text(
+                            'Login',
+                            style: TextStyle(color: Colors.blue),
+                          ),
+                        )
+                      ],
+                    ),
+                  ],
+                ),
               ),
             ),
           ),

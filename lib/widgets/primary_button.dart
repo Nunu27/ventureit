@@ -18,8 +18,8 @@ class PrimaryButton extends StatelessWidget {
         foregroundColor: theme.colorScheme.onPrimary,
         minimumSize: Size(double.infinity, height),
         padding: const EdgeInsets.symmetric(
-          horizontal: 10,
-          vertical: 1,
+          horizontal: 24,
+          vertical: 14,
         ),
       ),
       onPressed: onPress,
