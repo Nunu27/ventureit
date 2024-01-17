@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:routemaster/routemaster.dart';
 import 'package:ventureit/screens/admin_screens/dashboard.dart';
+import 'package:ventureit/screens/admin_screens/submission/submission_detail_screen.dart';
 import 'package:ventureit/screens/admin_screens/submission/submissions_screen.dart';
 import 'package:ventureit/screens/auth/login_screen.dart';
 import 'package:ventureit/screens/auth/register_screen.dart';
@@ -16,7 +17,9 @@ import 'package:ventureit/screens/member_screens/explore_screen.dart';
 import 'package:ventureit/screens/member_screens/missions_screen.dart';
 import 'package:ventureit/screens/member_screens/profile/edit_profile_screen.dart';
 import 'package:ventureit/screens/member_screens/profile/profile_screen.dart';
-import 'package:ventureit/screens/member_screens/submission/add_submission_screen.dart';
+import 'package:ventureit/screens/member_screens/submission/add_submission_contents.dart';
+import 'package:ventureit/screens/member_screens/submission/add_submission_general.dart';
+import 'package:ventureit/screens/member_screens/submission/add_submission_products.dart';
 import 'package:ventureit/screens/member_screens/submission/my_submissions_screen.dart';
 import 'package:ventureit/screens/member_screens/submission/submission_manual_screen.dart';
 
@@ -41,23 +44,27 @@ final routes = RouteMap(
     '/member/my-submissions': (_) =>
         const MaterialPage(child: MySubmissionsScreen()),
     '/member/add-submission': (_) =>
-        const MaterialPage(child: AddSubmissionScreen()),
-    '/member/business/:id': (route) {
-      final id = route.pathParameters['id'];
-      if (id != null) businessId = id;
-
-      return TabPage(
+        const MaterialPage(child: AddSubmissionGeneral()),
+    '/member/add-submission/products': (_) => const TransitionPage(
+        child: AddSubmissionProducts(),
+        pushTransition: PageTransition.none,
+        popTransition: PageTransition.none),
+    '/member/add-submission/contents': (_) => const TransitionPage(
+        child: AddSubmissionContents(),
+        pushTransition: PageTransition.none,
+        popTransition: PageTransition.none),
+    '/member/business/:id': (route) => TabPage(
           child: BusinessScreen(
-            businessId: businessId!,
+            businessId: route.pathParameters['id']!,
           ),
           paths: const [
             'products',
             'reviews',
             'gallery',
             'details',
-            'contents'
-          ]);
-    },
+            'contents',
+          ],
+        ),
     '/member/business/:id/products': (route) =>
         MaterialPage(child: ProductsScreen(id: route.pathParameters['id']!)),
     '/member/business/:id/reviews': (route) =>
@@ -76,6 +83,11 @@ final routes = RouteMap(
         ),
     '/admin/submissions': (_) => const MaterialPage(
           child: SubmissionsScreen(),
+        ),
+    '/admin/submission/:id': (route) => MaterialPage(
+          child: SubmissionDetailScreen(
+            id: route.pathParameters['id']!,
+          ),
         ),
     '/admin/profile': (_) => const MaterialPage(
           child: ProfileScreen(isDashboard: true),

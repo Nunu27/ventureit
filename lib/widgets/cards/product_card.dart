@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:ventureit/models/business/business_product_item.dart';
+import 'package:ventureit/utils/utils.dart';
 import 'package:ventureit/widgets/remote_image.dart';
+import 'package:timeago/timeago.dart' as timeago;
 
 class ProductCard extends StatelessWidget {
   final BusinessProductItem product;
@@ -58,14 +59,14 @@ class ProductCard extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          "Rp. ${product.price}",
+                          "Rp. ${numberFormatter.format(product.price)}",
                           style: TextStyle(
                             fontSize: 12,
                             color: theme.colorScheme.onPrimaryContainer,
                           ),
                         ),
                         Text(
-                          'last updated ...',
+                          'Last updated ${timeago.format(product.updatedAt)}',
                           style: TextStyle(
                             fontSize: 10,
                             color: theme.colorScheme.onPrimaryContainer

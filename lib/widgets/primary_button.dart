@@ -6,7 +6,7 @@ class PrimaryButton extends StatelessWidget {
   final double height;
 
   const PrimaryButton(
-      {super.key, required this.onPress, this.child, this.height = 50});
+      {super.key, required this.onPress, this.child, this.height = 40});
 
   @override
   Widget build(BuildContext context) {

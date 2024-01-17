@@ -23,16 +23,20 @@ class LocationController extends StateNotifier<bool> {
         _ref = ref,
         super(false);
 
-  void getLocation({bool force = false}) async {
+  Future<bool> getLocation({bool force = false}) async {
     state = true;
     final locationRes = await _repository.getLocation(force);
     state = false;
 
-    locationRes.fold(
-      (l) => showSnackBar(l.message),
+    return locationRes.fold(
+      (l) {
+        showSnackBar(l.message);
+        return false;
+      },
       (location) {
         userLocation = location;
         _ref.read(locationProvider.notifier).update((state) => location);
+        return true;
       },
     );
   }

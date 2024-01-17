@@ -2,6 +2,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:ventureit/constants/firestore_constants.dart';
+import 'package:ventureit/models/business/business.dart';
+import 'package:ventureit/models/submission/add_submission.dart';
+import 'package:ventureit/models/submission/edit_submission.dart';
+import 'package:ventureit/models/submission/entry_submission.dart';
+import 'package:ventureit/models/submission/remove_submission.dart';
 import 'package:ventureit/models/submission/submission.dart';
 import 'package:ventureit/providers/firebase_provider.dart';
 import 'package:ventureit/type_defs.dart';
@@ -19,6 +24,24 @@ class SubmissionRepository {
 
   CollectionReference get _submissions =>
       _firestore.collection(FirestoreConstants.submissionCollection);
+  CollectionReference get _businesses =>
+      _firestore.collection(FirestoreConstants.businessCollection);
+
+  Stream<List<Submission>> getPendingSubmissions() {
+    return _submissions
+        .where('status', isEqualTo: 'pending')
+        .limit(20)
+        .snapshots()
+        .map(
+          (event) => event.docs
+              .map(
+                (e) => Submission.fromMap(
+                  e.data() as Map<String, dynamic>,
+                ),
+              )
+              .toList(),
+        );
+  }
 
   Stream<List<Submission>> getSubmissionByUserId(String id) {
     return _submissions
@@ -55,11 +78,34 @@ class SubmissionRepository {
 
   FutureVoid approveSubmission(Submission submission) async {
     try {
-      // TODO update business data based on submission
+      final batch = _firestore.batch();
+      final businessId = submission.businessId;
+      final updateMap = <String, dynamic>{};
 
-      return right(_submissions.doc(submission.id).update({
-        'status': SubmissionStatus.approved,
-      }));
+      for (var entry in submission.data) {
+        if (entry is EntrySubmission) {
+          final business = Business.fromEntry(entry);
+          batch.set(_businesses.doc(business.id), business.toMap());
+        } else if (entry is AddSubmission) {
+          updateMap[entry.key] = FieldValue.arrayUnion(entry.value);
+        } else if (entry is EditSubmission) {
+          updateMap[entry.key] = entry.to;
+        } else if (entry is RemoveSubmission) {
+          updateMap[entry.key] = FieldValue.arrayRemove(entry.value);
+        }
+      }
+
+      if (updateMap.isNotEmpty) {
+        batch.update(_businesses.doc(businessId), updateMap);
+      }
+
+      batch.update(_submissions.doc(submission.id), {
+        'businessId': businessId,
+        'status': SubmissionStatus.approved.name,
+        'updatedAt': DateTime.now().millisecondsSinceEpoch,
+      });
+
+      return right(await batch.commit());
     } catch (e) {
       return left(getError(e));
     }
@@ -68,7 +114,8 @@ class SubmissionRepository {
   FutureVoid rejectSubmission(Submission submission) async {
     try {
       return right(_submissions.doc(submission.id).update({
-        'status': SubmissionStatus.rejected,
+        'status': SubmissionStatus.rejected.name,
+        'updatedAt': DateTime.now().millisecondsSinceEpoch,
       }));
     } catch (e) {
       return left(getError(e));

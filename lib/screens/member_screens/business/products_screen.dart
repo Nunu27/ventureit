@@ -12,12 +12,17 @@ class ProductsScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return ref.watch(getBusinessByIdProvider(id)).when(
-          data: (business) => ListView.builder(
-            padding: EdgeInsets.all(14),
-            itemCount: business.products.length,
-            itemBuilder: (context, index) =>
-                ProductCard(product: business.products[index]),
-          ),
+          data: (business) => business.products.isEmpty
+              ? const Center(
+                  child: Text(
+                      "Whoops, seems we don't have any data for this business"),
+                )
+              : ListView.builder(
+                  padding: const EdgeInsets.all(14),
+                  itemCount: business.products.length,
+                  itemBuilder: (context, index) =>
+                      ProductCard(product: business.products[index]),
+                ),
           error: (error, stackTrace) => ErrorView(error: error.toString()),
           loading: () => const Loader(),
         );

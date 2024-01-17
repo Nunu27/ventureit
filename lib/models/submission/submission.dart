@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+
 import 'package:ventureit/models/submission/add_submission.dart';
 import 'package:ventureit/models/submission/edit_submission.dart';
 import 'package:ventureit/models/submission/entry_submission.dart';
@@ -37,14 +38,16 @@ class Submission {
   final List<SubmissionData> data;
   final SubmissionStatus status;
   final DateTime createdAt;
+  final DateTime updatedAt;
 
   Submission({
     required this.id,
     required this.userId,
     this.businessId,
     required this.data,
-    this.status = SubmissionStatus.pending,
+    required this.status,
     required this.createdAt,
+    required this.updatedAt,
   });
 
   Submission copyWith({
@@ -54,6 +57,7 @@ class Submission {
     List<SubmissionData>? data,
     SubmissionStatus? status,
     DateTime? createdAt,
+    DateTime? updatedAt,
   }) {
     return Submission(
       id: id ?? this.id,
@@ -62,6 +66,7 @@ class Submission {
       data: data ?? this.data,
       status: status ?? this.status,
       createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
     );
   }
 
@@ -73,6 +78,14 @@ class Submission {
       'data': data.map((x) => x.toMap()).toList(),
       'status': status.name,
       'createdAt': createdAt.millisecondsSinceEpoch,
+      'updatedAt': updatedAt.millisecondsSinceEpoch,
+    };
+  }
+
+  Map<String, dynamic> toUpdateStatusMap(SubmissionStatus status) {
+    return <String, dynamic>{
+      'status': status.name,
+      'updatedAt': DateTime.now().millisecondsSinceEpoch,
     };
   }
 
@@ -83,18 +96,19 @@ class Submission {
       businessId:
           map['businessId'] != null ? map['businessId'] as String : null,
       data: List<SubmissionData>.from(
-        (map['data'] as List<int>).map<SubmissionData>(
+        (map['data']).map<SubmissionData>(
           (x) => SubmissionData.fromMap(x as Map<String, dynamic>),
         ),
       ),
       status: SubmissionStatus.values.byName(map['status']),
       createdAt: DateTime.fromMillisecondsSinceEpoch(map['createdAt'] as int),
+      updatedAt: DateTime.fromMillisecondsSinceEpoch(map['updatedAt'] as int),
     );
   }
 
   @override
   String toString() {
-    return 'Submission(id: $id, userId: $userId, businessId: $businessId, data: $data, status: $status, createdAt: $createdAt)';
+    return 'Submission(id: $id, userId: $userId, businessId: $businessId, data: $data, status: $status, createdAt: $createdAt, updatedAt: $updatedAt)';
   }
 
   @override
@@ -106,7 +120,8 @@ class Submission {
         other.businessId == businessId &&
         listEquals(other.data, data) &&
         other.status == status &&
-        other.createdAt == createdAt;
+        other.createdAt == createdAt &&
+        other.updatedAt == updatedAt;
   }
 
   @override
@@ -116,6 +131,7 @@ class Submission {
         businessId.hashCode ^
         data.hashCode ^
         status.hashCode ^
-        createdAt.hashCode;
+        createdAt.hashCode ^
+        updatedAt.hashCode;
   }
 }

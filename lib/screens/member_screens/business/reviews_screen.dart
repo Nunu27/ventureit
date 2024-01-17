@@ -51,9 +51,11 @@ class ReviewsScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
+
     return Column(children: [
       Expanded(
         child: ListView.builder(
+          physics: const NeverScrollableScrollPhysics(),
           itemCount: dummyReviews.length,
           itemBuilder: (context, index) {
             final review = dummyReviews[index];

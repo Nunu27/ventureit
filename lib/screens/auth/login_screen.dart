@@ -4,6 +4,7 @@ import 'package:routemaster/routemaster.dart';
 import 'package:ventureit/controllers/auth_controller.dart';
 import 'package:ventureit/utils/validation.dart';
 import 'package:ventureit/widgets/loader_overlay.dart';
+import 'package:ventureit/widgets/primary_button.dart';
 
 class LogInScreen extends ConsumerStatefulWidget {
   const LogInScreen({super.key});
@@ -95,29 +96,28 @@ class _LogInScreenState extends ConsumerState<LogInScreen> {
                     validator: validatePassword,
                   ),
                   const SizedBox(height: 20),
-                  ElevatedButton(
-                    onPressed: logIn,
-                    style: ElevatedButton.styleFrom(
-                        minimumSize: const Size(double.infinity, 50),
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(5))),
-                    child: const Text('Log In'),
+                  PrimaryButton(
+                    onPress: logIn,
+                    child: const Text('Login'),
                   ),
-                  const SizedBox(height: 20),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
+                  const Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-                      const Text("Don't have an account yet? "),
-                      GestureDetector(
-                        onTap: navigateToRegister,
-                        child: const Text(
-                          'Register',
-                          style: TextStyle(color: Colors.blue),
+                      Expanded(
+                        child: Padding(
+                          padding: EdgeInsets.all(20),
+                          child: Divider(),
                         ),
-                      )
+                      ),
+                      Text('or'),
+                      Expanded(
+                        child: Padding(
+                          padding: EdgeInsets.all(20),
+                          child: Divider(),
+                        ),
+                      ),
                     ],
                   ),
-                  const SizedBox(height: 50),
                   ElevatedButton(
                     onPressed: logInWithGoogle,
                     style: ElevatedButton.styleFrom(
@@ -134,6 +134,20 @@ class _LogInScreenState extends ConsumerState<LogInScreen> {
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(5))),
                     child: const Text('Continue as Guest'),
+                  ),
+                  const SizedBox(height: 50),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Text("Don't have an account yet? "),
+                      GestureDetector(
+                        onTap: navigateToRegister,
+                        child: const Text(
+                          'Register',
+                          style: TextStyle(color: Colors.blue),
+                        ),
+                      )
+                    ],
                   ),
                 ],
               ),

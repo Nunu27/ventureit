@@ -22,10 +22,6 @@ class _FilterModalState extends State<FilterModal> {
     super.initState();
   }
 
-  void closeModal() {
-    Navigator.of(context, rootNavigator: true).pop();
-  }
-
   void confirm() {
     Navigator.of(context, rootNavigator: true).pop(_options);
   }

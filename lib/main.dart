@@ -1,9 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:routemaster/routemaster.dart';
 import 'package:ventureit/controllers/auth_controller.dart';
+import 'package:ventureit/controllers/modal_controller.dart';
 import 'package:ventureit/firebase_options.dart';
 import 'package:ventureit/router.dart';
 import 'package:ventureit/theme/color_schemes.dart';
@@ -11,15 +13,36 @@ import 'package:ventureit/utils/utils.dart';
 
 final navigatorKey = GlobalKey<NavigatorState>();
 
-class MyBackButtonDispatcher extends RootBackButtonDispatcher {
+class RouterDelegate extends RoutemasterDelegate {
+  final WidgetRef _ref;
+
+  RouterDelegate({
+    required super.routesBuilder,
+    super.navigatorKey,
+    required WidgetRef ref,
+  }) : _ref = ref;
+
   @override
-  Future<bool> didPopRoute() async {
-    // Close any open modal
-    if (navigatorKey.currentState!.canPop()) {
+  Future<bool> popRoute() async {
+    if (modalShown) {
+      navigatorKey.currentState!.pop(false);
+      return true;
+    } else if (_ref.read(modalControllerProvider).modalActive) {
       navigatorKey.currentState!.pop();
       return true;
+    } else if (currentConfiguration!.path == '/member/add-submission') {
+      FocusManager.instance.primaryFocus?.unfocus();
+
+      final res =
+          await showDiscardData(navigatorKey.currentState!.context, _ref);
+
+      if (res) {
+        navigatorKey.currentState!.pop();
+      }
+      return true;
     }
-    return super.didPopRoute();
+
+    return super.popRoute();
   }
 }
 
@@ -28,7 +51,7 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-
+  FirebaseMessaging.instance.requestPermission(provisional: true);
   FirebaseFirestore.instance.settings = const Settings(
     persistenceEnabled: false,
   );
@@ -75,8 +98,8 @@ class _MainAppState extends ConsumerState<MainApp> {
         colorScheme: darkColorScheme,
       ),
       scaffoldMessengerKey: snackbarKey,
-      backButtonDispatcher: MyBackButtonDispatcher(),
-      routerDelegate: RoutemasterDelegate(
+      routerDelegate: RouterDelegate(
+        ref: ref,
         navigatorKey: navigatorKey,
         routesBuilder: (context) => routes,
       ),

@@ -1,18 +1,28 @@
 enum LinkSite {
   website('Website'),
-  gmaps('Google Maps'),
-  whatsapp('WhatsApp', logo: 'assets/images/whatsapp.png'),
-  linktree('LinkTree'),
-  instagram('Instagram', logo: 'assets/images/instagram.png'),
-  gofood('GoFood'),
-  tiktok('TikTok', logo: 'assets/images/tiktok.png'),
-  twitter('Twitter', logo: 'assets/images/x.png');
+  gmaps('Google Maps', logo: 'assets/images/site_logo/maps.png'),
+  whatsapp('WhatsApp', logo: 'assets/images/site_logo/whatsapp.png'),
+  linktree('LinkTree', logo: 'assets/images/site_logo/linktree.png'),
+  instagram('Instagram', logo: 'assets/images/site_logo/instagram.png'),
+  gofood('GoFood', logo: 'assets/images/site_logo/gofood.png'),
+  tiktok('TikTok', logo: 'assets/images/site_logo/tiktok.png'),
+  twitter('Twitter', logo: 'assets/images/site_logo/x.png');
 
-  const LinkSite(this.source, {this.logo = 'assets/images/instagram.png'});
+  const LinkSite(this.source,
+      {this.logo = 'assets/images/site_logo/instagram.png'});
 
   final String source;
   final String logo;
 }
+
+final linkHostname = {
+  'wa.me': LinkSite.gmaps,
+  'linktr.ee': LinkSite.linktree,
+  'www.instagram.com': LinkSite.instagram,
+  'gofood.co.id': LinkSite.gofood,
+  'tiktok.com': LinkSite.tiktok,
+  'twitter.com': LinkSite.twitter,
+};
 
 class ExternalLink {
   final LinkSite site;

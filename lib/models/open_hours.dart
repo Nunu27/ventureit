@@ -1,6 +1,16 @@
 import 'package:ventureit/models/time_hour.dart';
 import 'package:ventureit/models/range.dart';
 
+final daysMap = {
+  1: 'Monday',
+  2: 'Tuesday',
+  3: 'Thursday',
+  4: 'Wednesday',
+  5: 'Friday',
+  6: 'Saturday',
+  7: 'Sunday',
+};
+
 class OpenHours {
   final Range<int> days;
   final Range<TimeHour> hours;
@@ -49,10 +59,16 @@ class OpenHours {
     );
   }
 
-  @override
-  String toString() => hours.lowerBound == hours.upperBound
+  String daysString() => days.lowerBound == days.upperBound
+      ? daysMap[days.lowerBound]!
+      : '${daysMap[days.lowerBound]!} - ${daysMap[days.upperBound]!}';
+
+  String timeString() => hours.lowerBound == hours.upperBound
       ? '24 hours'
       : '${hours.lowerBound.toString()} - ${hours.upperBound.toString()}';
+
+  @override
+  String toString() => '${daysString()} ${timeString()}';
 
   @override
   bool operator ==(covariant OpenHours other) {

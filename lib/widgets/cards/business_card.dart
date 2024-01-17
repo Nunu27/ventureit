@@ -130,7 +130,7 @@ class BusinessCard extends ConsumerWidget {
                                                       color: Colors.red),
                                                 ),
                                           TextSpan(
-                                            text: openHour.toString(),
+                                            text: openHour.timeString(),
                                             style: TextStyle(
                                                 color: theme.colorScheme
                                                     .onPrimaryContainer),

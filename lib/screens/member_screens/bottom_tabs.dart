@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:routemaster/routemaster.dart';
 import 'package:ventureit/controllers/location_controller.dart';
@@ -20,8 +19,10 @@ class _BottomTabsState extends ConsumerState<BottomTabs> {
   @override
   void initState() {
     super.initState();
-    SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
-      ref.read(locationControllerProvider.notifier).getLocation();
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      if (ref.read(locationProvider) == null) {
+        ref.read(locationControllerProvider.notifier).getLocation();
+      }
       waiting = false;
     });
   }
@@ -39,7 +40,7 @@ class _BottomTabsState extends ConsumerState<BottomTabs> {
 
     if (!waiting && !isLoading && !isLoaded) isLoaded = true;
     if (location == null && isLoaded) {
-      SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
+      WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
         showLocationPickerSheet();
       });
     }

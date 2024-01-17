@@ -1,6 +1,7 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:ventureit/controllers/business_controller.dart';
+import 'package:ventureit/utils/utils.dart';
 import 'package:ventureit/widgets/error_view.dart';
 import 'package:ventureit/widgets/loader.dart';
 
@@ -29,6 +30,7 @@ class DetailsScreen extends ConsumerWidget {
                         width: 24,
                       ),
                       GestureDetector(
+                        onTap: () => openUrl(externalLink.url),
                         child: Text(
                           externalLink.site.source,
                           style: const TextStyle(
@@ -39,20 +41,29 @@ class DetailsScreen extends ConsumerWidget {
                     ],
                   ),
                 ),
+                const SizedBox(height: 16),
                 const Text(
                   'Description',
                   style: TextStyle(fontWeight: FontWeight.w500),
                 ),
                 Text(business.description ?? 'No description yet'),
+                const SizedBox(height: 16),
                 const Text(
                   'Open hours',
                   style: TextStyle(fontWeight: FontWeight.w500),
                 ),
                 ...business.openHours.map(
                   (openHour) => Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        openHour.toString(),
+                        openHour.daysString(),
+                        style: const TextStyle(
+                          fontSize: 12,
+                        ),
+                      ),
+                      Text(
+                        openHour.timeString(),
                         style: const TextStyle(
                           fontSize: 12,
                         ),
@@ -64,7 +75,7 @@ class DetailsScreen extends ConsumerWidget {
             ),
           ),
           error: (error, stackTrace) => ErrorView(error: error.toString()),
-          loading: () => Loader(),
+          loading: () => const Loader(),
         );
   }
 }

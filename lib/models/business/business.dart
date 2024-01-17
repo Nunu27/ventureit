@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
+import 'package:uuid/uuid.dart';
 import 'package:ventureit/models/base_position.dart';
 
 import 'package:ventureit/models/business/business_content.dart';
@@ -9,6 +10,7 @@ import 'package:ventureit/models/business/business_product_item.dart';
 import 'package:ventureit/models/business/external_link.dart';
 import 'package:ventureit/models/open_hours.dart';
 import 'package:ventureit/models/range.dart';
+import 'package:ventureit/models/submission/entry_submission.dart';
 
 enum BusinessCategory {
   culinary('Culinary', Icons.food_bank),
@@ -166,9 +168,31 @@ class Business extends BusinessModel {
       updatedAt: DateTime.fromMillisecondsSinceEpoch(map['updatedAt'] as int),
     );
   }
+  factory Business.fromEntry(EntrySubmission entry) {
+    return Business(
+      id: const Uuid().v4(),
+      name: entry.name,
+      placemark: entry.location.placemark,
+      location: entry.location.position,
+      cover: entry.cover,
+      description: entry.description,
+      phoneNumber: null,
+      rating: 0,
+      ratedBy: 0,
+      priceRange: entry.priceRange,
+      category: entry.category,
+      openHours: entry.openHours,
+      products: entry.products,
+      externalLinks: entry.externalLinks,
+      contents: entry.contents,
+      createdAt: DateTime.now(),
+      updatedAt: DateTime.now(),
+    );
+  }
+
   @override
   String toString() {
-    return 'Business(id: $id, name: $name, placemark: $placemark, location: $location, cover: $cover, description: $description, phoneNumber: $phoneNumber, rating: $rating, ratedBy: $ratedBy, priceRange: $priceRange, category: $category, openHours: $openHours, products: $products, externalLinks: $externalLinks, contents: $contents, createdAt: $createdAt, updatedAt: $updatedAt)';
+    return 'Business(id: $id, name: $name, placemark: $placemark, location: $location, cover: $cover, description: $description, phoneNumber: $phoneNumber, 0: $rating, ratedBy: $ratedBy, priceRange: $priceRange, category: $category, openHours: $openHours, products: $products, externalLinks: $externalLinks, contents: $contents, createdAt: $createdAt, updatedAt: $updatedAt)';
   }
 
   @override

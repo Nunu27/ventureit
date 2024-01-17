@@ -20,6 +20,9 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
     showConfirmationDialog(
       context: context,
       title: 'Log out',
+      optionOne: 'Cancel',
+      optionTwo: 'Continue',
+      isDismissable: true,
       onOptionTwo: () {
         ref.read(authControllerProvider.notifier).logOut();
         Routemaster.of(context).replace('/login');

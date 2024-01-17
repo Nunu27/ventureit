@@ -1,3 +1,6 @@
+import 'package:flutter/material.dart';
+import 'package:ventureit/utils/utils.dart';
+
 class TimeHour {
   final int hours;
   final int minute;
@@ -27,9 +30,16 @@ class TimeHour {
       minute: map % 60,
     );
   }
+
+  factory TimeHour.fromTimeOfDay(TimeOfDay timeOfDay) {
+    return TimeHour(
+      hours: timeOfDay.hour,
+      minute: timeOfDay.minute,
+    );
+  }
+
   @override
-  String toString() =>
-      '${hours.toString().padLeft(2, '0')}.${minute.toString().padLeft(2, '0')}';
+  String toString() => '${padTime(hours)}:${padTime(minute)}';
 
   @override
   bool operator ==(covariant TimeHour other) {

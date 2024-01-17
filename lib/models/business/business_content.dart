@@ -32,14 +32,14 @@ class BusinessContent {
     return BusinessContent(
       tiktok: map['tiktok'] != null
           ? List<BusinessContentItem>.from(
-              (map['tiktok'] as List<int>).map<BusinessContentItem?>(
+              (map['tiktok']).map<BusinessContentItem?>(
                 (x) => BusinessContentItem.fromMap(x as Map<String, dynamic>),
               ),
             )
           : [],
       instagram: map['instagram'] != null
           ? List<BusinessContentItem>.from(
-              (map['instagram'] as List<int>).map<BusinessContentItem?>(
+              (map['instagram']).map<BusinessContentItem?>(
                 (x) => BusinessContentItem.fromMap(x as Map<String, dynamic>),
               ),
             )

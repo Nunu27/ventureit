@@ -6,7 +6,7 @@ import 'package:ventureit/controllers/location_controller.dart';
 import 'package:ventureit/widgets/error_view.dart';
 import 'package:ventureit/widgets/loader.dart';
 
-class BusinessScreen extends ConsumerStatefulWidget {
+class BusinessScreen extends ConsumerWidget {
   final String businessId;
   const BusinessScreen({
     super.key,
@@ -14,23 +14,19 @@ class BusinessScreen extends ConsumerStatefulWidget {
   });
 
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() => _BusinessScreenState();
-}
-
-class _BusinessScreenState extends ConsumerState<BusinessScreen> {
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final tabPage = TabPage.of(context);
     final location = ref.watch(locationProvider)!;
     final media = MediaQuery.of(context);
     final theme = Theme.of(context);
 
-    return ref.watch(getBusinessByIdProvider(widget.businessId)).when(
+    return ref.watch(getBusinessByIdProvider(businessId)).when(
           data: (business) {
             final openHours = business.getOpenHours();
 
             return Scaffold(
               appBar: AppBar(
+                scrolledUnderElevation: 0,
                 backgroundColor: theme.colorScheme.primaryContainer,
                 actions: [
                   PopupMenuButton(
@@ -104,7 +100,7 @@ class _BusinessScreenState extends ConsumerState<BusinessScreen> {
                                             ),
                                   if (openHours != null)
                                     Text(
-                                      openHours.toString(),
+                                      openHours.timeString(),
                                       style: TextStyle(
                                         color: theme
                                             .colorScheme.onPrimaryContainer,
@@ -170,42 +166,46 @@ class _BusinessScreenState extends ConsumerState<BusinessScreen> {
                       ),
                     )),
               ),
-              body: Scaffold(
-                appBar: PreferredSize(
-                  preferredSize: const Size.fromHeight(270),
-                  child: Column(
-                    children: [
-                      Image.network(
-                        business.cover,
-                        height: 221,
-                        width: media.size.width,
-                        fit: BoxFit.cover,
-                      ),
-                      TabBar(
-                        controller: tabPage.controller,
-                        isScrollable: true,
-                        tabAlignment: TabAlignment.start,
-                        tabs: const [
-                          Tab(
-                            text: 'Products',
-                          ),
-                          Tab(
-                            text: 'Reviews',
-                          ),
-                          Tab(
-                            text: 'Gallery',
-                          ),
-                          Tab(
-                            text: 'Details',
-                          ),
-                          Tab(
-                            text: 'Contents',
-                          ),
-                        ],
-                      )
-                    ],
-                  ),
+              body: NestedScrollView(
+                physics: const AlwaysScrollableScrollPhysics(
+                  parent: BouncingScrollPhysics(),
                 ),
+                headerSliverBuilder: (context, innerBoxIsScrolled) => [
+                  SliverOverlapAbsorber(
+                    handle: NestedScrollView.sliverOverlapAbsorberHandleFor(
+                        context),
+                    sliver: SliverSafeArea(
+                      top: false,
+                      sliver: SliverAppBar(
+                        scrolledUnderElevation: 0,
+                        backgroundColor: theme.colorScheme.primaryContainer,
+                        pinned: true,
+                        floating: true,
+                        automaticallyImplyLeading: false,
+                        titleSpacing: 0,
+                        toolbarHeight: 221,
+                        title: Image.network(
+                          business.cover,
+                          height: 221,
+                          width: media.size.width,
+                          fit: BoxFit.cover,
+                        ),
+                        bottom: TabBar(
+                          controller: tabPage.controller,
+                          isScrollable: true,
+                          tabAlignment: TabAlignment.start,
+                          tabs: const [
+                            Tab(text: 'Products'),
+                            Tab(text: 'Reviews'),
+                            Tab(text: 'Gallery'),
+                            Tab(text: 'Details'),
+                            Tab(text: 'Contents'),
+                          ],
+                        ),
+                      ),
+                    ),
+                  )
+                ],
                 body: TabBarView(
                   controller: tabPage.controller,
                   children: [
@@ -217,7 +217,10 @@ class _BusinessScreenState extends ConsumerState<BusinessScreen> {
             );
           },
           error: (error, stackTrace) => ErrorView(error: error.toString()),
-          loading: () => const Loader(),
+          loading: () => Container(
+            color: theme.colorScheme.background,
+            child: const Loader(),
+          ),
         );
   }
 }

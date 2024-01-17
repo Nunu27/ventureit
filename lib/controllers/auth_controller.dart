@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -39,9 +41,19 @@ class AuthController extends StateNotifier<bool> {
 
     if (user == null) return;
 
-    final res =
-        await _ref.read(userControllerProvider).getUserData(user.uid).first;
+    final res = await _ref
+        .read(userControllerProvider.notifier)
+        .getUserData(user.uid)
+        .first;
     _ref.read(userProvider.notifier).update((state) => res);
+  }
+
+  void editUser({
+    required File? avatar,
+    required String name,
+    required String username,
+  }) async {
+    state = true;
   }
 
   void register({

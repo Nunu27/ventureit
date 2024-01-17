@@ -1,15 +1,33 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:intl/intl.dart';
 import 'package:routemaster/routemaster.dart';
+import 'package:time_range_picker/time_range_picker.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:ventureit/models/failure.dart';
+import 'package:ventureit/models/open_hours.dart';
+import 'package:ventureit/providers/add_submission_provider.dart';
 
 final GlobalKey<ScaffoldMessengerState> snackbarKey =
     GlobalKey<ScaffoldMessengerState>();
+
+final numberFormatter = NumberFormat.decimalPatternDigits(
+  locale: 'in',
+  decimalDigits: 2,
+);
+
 bool isGuest() {
   final user = FirebaseAuth.instance.currentUser;
 
-  if (user == null || user.isAnonymous) return true;
+  if (user == null) return true;
   return false;
+}
+
+bool isVerified() {
+  final user = FirebaseAuth.instance.currentUser;
+
+  return user!.emailVerified;
 }
 
 void showSnackBar(String message) {
@@ -20,7 +38,7 @@ void showSnackBar(String message) {
     ..showSnackBar(SnackBar(content: Text(message)));
 }
 
-void showConfirmationDialog({
+Future<T?> showConfirmationDialog<T>({
   required BuildContext context,
   required String title,
   bool isDismissable = false,
@@ -28,31 +46,30 @@ void showConfirmationDialog({
   String? optionOne,
   VoidCallback? onOptionOne,
   String? optionTwo,
-  required VoidCallback onOptionTwo,
+  VoidCallback? onOptionTwo,
   bool useRootNavigator = true,
-}) {
-  Widget optionOneBtn = TextButton(
-    onPressed: onOptionOne ??
-        () {
-          Navigator.of(context, rootNavigator: true).pop();
-        },
-    child: Text(optionOne ?? "Cancel"),
-  );
-  Widget optionTwoBtn = TextButton(
-    onPressed: onOptionTwo,
-    child: Text(optionTwo ?? "Continue"),
-  );
-
+}) async {
   AlertDialog alert = AlertDialog(
     title: Text(title),
     content: body == null ? null : Text(body),
     actions: [
-      optionOneBtn,
-      optionTwoBtn,
+      if (optionOne != null)
+        TextButton(
+          onPressed: onOptionOne ??
+              () {
+                Navigator.of(context).pop(false);
+              },
+          child: Text(optionOne),
+        ),
+      if (optionTwo != null)
+        TextButton(
+          onPressed: onOptionTwo,
+          child: Text(optionTwo),
+        ),
     ],
   );
 
-  showDialog(
+  return await showDialog(
     context: context,
     barrierColor: Colors.black.withAlpha(50),
     barrierDismissible: isDismissable,
@@ -76,6 +93,39 @@ void checkGuest(BuildContext context) {
       onOptionTwo: () => Routemaster.of(context).replace('/register'),
       useRootNavigator: false,
     );
+  } else if (!isVerified()) {
+    showConfirmationDialog(
+      context: context,
+      isDismissable: false,
+      useRootNavigator: false,
+      title: 'Account not verified',
+      body: 'Please verify your account first to use this feature.',
+    );
+  }
+}
+
+bool modalShown = false;
+
+Future<bool> showDiscardData(BuildContext context, WidgetRef ref) async {
+  modalShown = true;
+  final res = await showConfirmationDialog(
+    context: context,
+    title: 'Discard data',
+    body: 'Are you sure to go back?',
+    optionOne: 'Cancel',
+    optionTwo: 'Discard',
+    onOptionTwo: () {
+      ref.read(addSubmissionProvider.notifier).update((state) => null);
+      Navigator.of(context).pop(true);
+    },
+  );
+  modalShown = false;
+  return res;
+}
+
+void openUrl(String url) async {
+  if (!await launchUrl(Uri.parse(url))) {
+    showSnackBar('Failed to open url');
   }
 }
 
@@ -87,4 +137,53 @@ Failure getError(Object e) {
   }
 
   return Failure(message: e.toString());
+}
+
+String padTime(int num) {
+  return num.toString().padLeft(2, '0');
+}
+
+String formatTimeRange(TimeRange range) {
+  return '${padTime(range.startTime.hour)}:${padTime(range.startTime.minute)} - ${padTime(range.endTime.hour)}:${padTime(range.endTime.minute)}';
+}
+
+List<MapEntry<int, String>> getClosedDays(List<OpenHours> openHours) {
+  Map<int, String> data = Map<int, String>.from(daysMap);
+
+  for (var openHour in openHours) {
+    data.removeWhere(
+      (key, value) =>
+          key >= openHour.days.lowerBound && key <= openHour.days.upperBound,
+    );
+  }
+
+  return data.entries.toList();
+}
+
+String getDays(List<MapEntry<int, String>> daysList) {
+  String? startDay;
+  MapEntry<int, String>? lastEntry;
+  List<String> days = [];
+
+  for (var entry in daysList) {
+    startDay ??= entry.value;
+    if (lastEntry == null || lastEntry.key == entry.key - 1) {
+      lastEntry = entry;
+    } else {
+      days.add(startDay == lastEntry.value
+          ? startDay
+          : '$startDay-${lastEntry.value}');
+
+      startDay = entry.value;
+      lastEntry = entry;
+    }
+  }
+
+  if (startDay != null && lastEntry != null) {
+    days.add(startDay == lastEntry.value
+        ? startDay
+        : '$startDay-${lastEntry.value}');
+  }
+
+  return days.join(", ");
 }
