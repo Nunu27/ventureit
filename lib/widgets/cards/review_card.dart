@@ -66,7 +66,7 @@ class _ReviewCardState extends ConsumerState<ReviewCard> {
     final theme = Theme.of(context);
 
     return Padding(
-      padding: const EdgeInsets.all(18),
+      padding: const EdgeInsets.symmetric(vertical: 8),
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 10),
         decoration: BoxDecoration(
@@ -130,7 +130,7 @@ class _ReviewCardState extends ConsumerState<ReviewCard> {
                         height: 14,
                       ),
                       Text(
-                        widget.review.description!,
+                        widget.review.description ?? 'No description',
                         style: TextStyle(
                           color: theme.colorScheme.onPrimaryContainer,
                           fontSize: 12,

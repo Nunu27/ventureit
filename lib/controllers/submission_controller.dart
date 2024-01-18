@@ -13,6 +13,7 @@ import 'package:ventureit/utils/utils.dart';
 
 final submissionControllerProvider =
     StateNotifierProvider<SubmissionController, bool>((ref) {
+  ref.watch(authStateChangeProvider);
   return SubmissionController(
     repository: ref.watch(submissionRepositoryProvider),
     storageRepo: ref.watch(storageRepositoryProvider),

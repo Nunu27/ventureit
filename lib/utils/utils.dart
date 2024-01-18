@@ -14,7 +14,7 @@ final GlobalKey<ScaffoldMessengerState> snackbarKey =
 
 final numberFormatter = NumberFormat.decimalPatternDigits(
   locale: 'in',
-  decimalDigits: 2,
+  decimalDigits: 0,
 );
 
 bool isGuest() {
@@ -131,7 +131,11 @@ void openUrl(String url) async {
 }
 
 int getNumber(String str) {
-  return int.parse(str.replaceAll(RegExp(r'[^\d]'), ''));
+  try {
+    return int.parse(str.replaceAll(RegExp(r'[^\-\d]'), ''));
+  } catch (e) {
+    return 0;
+  }
 }
 
 Failure getError(Object e) {
@@ -139,7 +143,10 @@ Failure getError(Object e) {
     return Failure(message: e.message!);
   } else if (e is FirebaseException) {
     return Failure(message: e.message!);
+  } else if (e is String) {
+    return Failure(message: e);
   }
+
   print(e);
 
   return Failure(message: 'Something went wrong');

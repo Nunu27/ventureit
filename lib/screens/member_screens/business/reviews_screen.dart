@@ -24,63 +24,66 @@ class ReviewsScreen extends ConsumerWidget {
     final theme = Theme.of(context);
 
     return ref.watch(getUserReviewProvider(id)).when(
-          data: (myReview) => Column(children: [
-            Expanded(
-              child: ref.watch(getReviewsByBusinessIdProvider(id)).when(
-                    data: (reviews) => myReview == null && reviews.isEmpty
-                        ? const Center(child: Text('No reviews'))
-                        : ListView.builder(
-                            physics: const NeverScrollableScrollPhysics(),
-                            itemCount: myReview == null
-                                ? reviews.length
-                                : reviews.length + 1,
-                            itemBuilder: (context, index) => myReview == null
-                                ? ReviewCard(review: reviews[index])
-                                : ReviewCard(
-                                    review: index == 0
-                                        ? myReview
-                                        : reviews[index - 1]),
-                          ),
-                    error: (error, stackTrace) =>
-                        ErrorView(error: error.toString()),
-                    loading: () => const Loader(),
-                  ),
-            ),
-            GestureDetector(
-              onTap: () => showReviewModal(context, ref, myReview),
-              behavior: HitTestBehavior.opaque,
-              child: Container(
-                  decoration: BoxDecoration(
-                    color: theme.colorScheme.primaryContainer,
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  margin: const EdgeInsets.all(18),
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 18, vertical: 12),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Expanded(
-                        child: Text(
-                          myReview?.description ?? "Let's add a review here",
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          style: TextStyle(
-                            fontSize: 12,
-                            color: theme.colorScheme.onPrimaryContainer,
+          data: (myReview) => Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 18.0, vertical: 8),
+            child: Column(children: [
+              Expanded(
+                child: ref.watch(getReviewsByBusinessIdProvider(id)).when(
+                      data: (reviews) => myReview == null && reviews.isEmpty
+                          ? const Center(child: Text('No reviews'))
+                          : ListView.builder(
+                              physics: const NeverScrollableScrollPhysics(),
+                              itemCount: myReview == null
+                                  ? reviews.length
+                                  : reviews.length + 1,
+                              itemBuilder: (context, index) => myReview == null
+                                  ? ReviewCard(review: reviews[index])
+                                  : ReviewCard(
+                                      review: index == 0
+                                          ? myReview
+                                          : reviews[index - 1]),
+                            ),
+                      error: (error, stackTrace) =>
+                          ErrorView(error: error.toString()),
+                      loading: () => const Loader(),
+                    ),
+              ),
+              GestureDetector(
+                onTap: () => showReviewModal(context, ref, myReview),
+                behavior: HitTestBehavior.opaque,
+                child: Container(
+                    decoration: BoxDecoration(
+                      color: theme.colorScheme.primaryContainer,
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    margin: const EdgeInsets.only(top: 8),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 18, vertical: 12),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Expanded(
+                          child: Text(
+                            myReview?.description ?? "Let's add a review here",
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(
+                              fontSize: 12,
+                              color: theme.colorScheme.onPrimaryContainer,
+                            ),
                           ),
                         ),
-                      ),
-                      if (myReview != null) Rating(myReview.rating),
-                      Icon(
-                        Icons.chevron_right,
-                        color: theme.colorScheme.onPrimaryContainer,
-                        size: 24,
-                      ),
-                    ],
-                  )),
-            )
-          ]),
+                        if (myReview != null) Rating(myReview.rating),
+                        Icon(
+                          Icons.chevron_right,
+                          color: theme.colorScheme.onPrimaryContainer,
+                          size: 24,
+                        ),
+                      ],
+                    )),
+              )
+            ]),
+          ),
           error: (error, stackTrace) => ErrorView(error: error.toString()),
           loading: () => const Loader(),
         );

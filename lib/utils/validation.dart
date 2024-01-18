@@ -1,3 +1,5 @@
+import 'package:ventureit/utils/utils.dart';
+
 final emailRegex = RegExp(r"^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$");
 
 // Auth
@@ -37,5 +39,16 @@ String? validateProductName(String? value) {
 
 String? validateProductPrice(String? value) {
   if (value?.isEmpty ?? false) return "Enter product price";
+  if (getNumber(value ?? '') <= 0) {
+    return 'Must be positive number greater than zero';
+  }
+  return null;
+}
+
+String? validatePositiveNumber(String? value) {
+  if (value?.isEmpty ?? false) return "Enter a number";
+  if (getNumber(value ?? '') <= 0) {
+    return 'Must be positive number greater than zero';
+  }
   return null;
 }

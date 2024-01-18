@@ -98,141 +98,139 @@ class _OpenHoursModalState extends State<OpenHoursModal> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 4),
-        child: Column(
-          children: [
-            Expanded(
-              child: SingleChildScrollView(
-                physics: const ClampingScrollPhysics(),
-                controller: widget.scrollController,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Text(
-                      'Fill in open hours',
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.w500,
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 4),
+      child: Column(
+        children: [
+          Expanded(
+            child: SingleChildScrollView(
+              physics: const ClampingScrollPhysics(),
+              controller: widget.scrollController,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    'Fill in open hours',
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                  const SizedBox(height: 18),
+                  const Text(
+                    'Day range',
+                    style: TextStyle(fontSize: 16),
+                  ),
+                  const SizedBox(height: 8),
+                  Row(children: [
+                    Expanded(
+                      child: CustomDropdown(
+                        controller: fromController,
+                        hintText: 'From',
+                        initialSelection: from,
+                        onSelected: (p0) => setState(() {
+                          from = p0;
+                        }),
+                        entries: closedDays
+                            .where((e) => to == null || e.key < to!)
+                            .map(
+                              (e) => DropdownMenuEntry(
+                                value: e.key,
+                                label: e.value,
+                              ),
+                            )
+                            .toList(),
                       ),
                     ),
-                    const SizedBox(height: 18),
-                    const Text(
-                      'Day range',
-                      style: TextStyle(fontSize: 16),
-                    ),
-                    const SizedBox(height: 8),
-                    Row(children: [
-                      Expanded(
-                        child: CustomDropdown(
-                          controller: fromController,
-                          hintText: 'From',
-                          initialSelection: from,
-                          onSelected: (p0) => setState(() {
-                            from = p0;
-                          }),
-                          entries: closedDays
-                              .where((e) => to == null || e.key < to!)
-                              .map(
-                                (e) => DropdownMenuEntry(
-                                  value: e.key,
-                                  label: e.value,
-                                ),
-                              )
-                              .toList(),
-                        ),
-                      ),
-                      const SizedBox(width: 8),
-                      Expanded(
-                        child: CustomDropdown(
-                          controller: toController,
-                          hintText: 'To',
-                          initialSelection: to,
-                          onSelected: (p0) => setState(() {
-                            to = p0;
-                          }),
-                          entries: closedDays
-                              .where((e) => from == null || e.key > from!)
-                              .map(
-                                (e) => DropdownMenuEntry(
-                                  value: e.key,
-                                  label: e.value,
-                                ),
-                              )
-                              .toList(),
-                        ),
-                      ),
-                    ]),
-                    CustomPressableInput(
-                      onPress: selectTimeRange,
-                      label: 'Hour range',
-                      child: Text(
-                        open24Hours
-                            ? '24 Hours'
-                            : timeRange == null
-                                ? ''
-                                : formatTimeRange(timeRange!),
-                        style: const TextStyle(fontSize: 12),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: CustomDropdown(
+                        controller: toController,
+                        hintText: 'To',
+                        initialSelection: to,
+                        onSelected: (p0) => setState(() {
+                          to = p0;
+                        }),
+                        entries: closedDays
+                            .where((e) => from == null || e.key > from!)
+                            .map(
+                              (e) => DropdownMenuEntry(
+                                value: e.key,
+                                label: e.value,
+                              ),
+                            )
+                            .toList(),
                       ),
                     ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Row(
-                          children: [
-                            Checkbox(
-                              value: open24Hours,
-                              onChanged: (value) => setState(() {
-                                open24Hours = !open24Hours;
-                              }),
-                            ),
-                            const Text('Open 24 hours'),
-                          ],
-                        ),
-                        SecondaryButton(
-                          onPressed: add,
-                          child: const Text('Add'),
-                        ),
-                      ],
+                  ]),
+                  CustomPressableInput(
+                    onPress: selectTimeRange,
+                    label: 'Hour range',
+                    child: Text(
+                      open24Hours
+                          ? '24 Hours'
+                          : timeRange == null
+                              ? ''
+                              : formatTimeRange(timeRange!),
+                      style: const TextStyle(fontSize: 12),
                     ),
-                    const SizedBox(height: 4),
-                    ...current.map(
-                      (e) => OpenHourCard(
-                        text: '${e.daysString()}, ${e.timeString()}',
-                        trailing: GestureDetector(
-                          onTap: () {
-                            current.remove(e);
-                            setState(() {
-                              closedDays = getClosedDays(current);
-                            });
-                          },
-                          child: const Icon(
-                            Icons.delete,
-                            color: Colors.red,
-                            size: 20,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Row(
+                        children: [
+                          Checkbox(
+                            value: open24Hours,
+                            onChanged: (value) => setState(() {
+                              open24Hours = !open24Hours;
+                            }),
                           ),
+                          const Text('Open 24 hours'),
+                        ],
+                      ),
+                      SecondaryButton(
+                        onPressed: add,
+                        child: const Text('Add'),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 4),
+                  ...current.map(
+                    (e) => OpenHourCard(
+                      text: '${e.daysString()}, ${e.timeString()}',
+                      trailing: GestureDetector(
+                        onTap: () {
+                          current.remove(e);
+                          setState(() {
+                            closedDays = getClosedDays(current);
+                          });
+                        },
+                        child: const Icon(
+                          Icons.delete,
+                          color: Colors.red,
+                          size: 20,
                         ),
                       ),
                     ),
-                    if (closedDays.isNotEmpty)
-                      OpenHourCard(
-                        isOpen: false,
-                        text: getDays(closedDays),
-                      )
-                  ],
-                ),
+                  ),
+                  if (closedDays.isNotEmpty)
+                    OpenHourCard(
+                      isOpen: false,
+                      text: getDays(closedDays),
+                    )
+                ],
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.only(top: 4),
-              child: PrimaryButton(
-                onPress: confirm,
-                child: const Text('Confirm'),
-              ),
-            )
-          ],
-        ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(top: 4),
+            child: PrimaryButton(
+              onPress: confirm,
+              child: const Text('Confirm'),
+            ),
+          )
+        ],
       ),
     );
   }

@@ -9,6 +9,7 @@ class CustomTextForm extends StatelessWidget {
   final int? maxLength;
   final int? maxLines;
   final String? Function(String?)? validator;
+  final Function(String?)? onChanged;
   final TextInputType? keyboardType;
   final List<TextInputFormatter>? inputFormatters;
 
@@ -20,6 +21,7 @@ class CustomTextForm extends StatelessWidget {
     this.maxLength,
     this.maxLines,
     this.validator,
+    this.onChanged,
     this.keyboardType,
     this.inputFormatters,
   });
@@ -42,6 +44,9 @@ class CustomTextForm extends StatelessWidget {
             maxLength: maxLength,
             hintText: placeholder,
             inputFormatters: inputFormatters,
+            keyboardType: keyboardType,
+            onChanged: onChanged,
+            validator: validator,
           ),
         ],
       ),

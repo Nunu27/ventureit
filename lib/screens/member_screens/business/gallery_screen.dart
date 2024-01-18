@@ -18,6 +18,7 @@ class GalleryScreen extends ConsumerWidget {
                   child: Text('The gallery is still empty'),
                 )
               : MasonryGridView.count(
+                  physics: NeverScrollableScrollPhysics(),
                   crossAxisCount: 3,
                   mainAxisSpacing: 4,
                   itemCount: data.length,

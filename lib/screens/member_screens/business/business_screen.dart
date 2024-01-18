@@ -35,6 +35,9 @@ class BusinessScreen extends ConsumerWidget {
                       if (value == "edit") {
                         Routemaster.of(context)
                             .push("/member/business/${business.id}/edit");
+                      } else if (value == "promote") {
+                        Routemaster.of(context)
+                            .push("/member/business/${business.id}/promote");
                       }
                     },
                     itemBuilder: (BuildContext context) => <PopupMenuEntry>[

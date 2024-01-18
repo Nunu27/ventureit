@@ -39,7 +39,7 @@ class _CategorySelectModalState extends State<CategorySelectModal> {
       children: [
         Expanded(
           child: SingleChildScrollView(
-            physics: ClampingScrollPhysics(),
+            physics: const ClampingScrollPhysics(),
             controller: widget.scrollController,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,

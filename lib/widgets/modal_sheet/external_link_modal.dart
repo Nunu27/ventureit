@@ -60,86 +60,84 @@ class _ExternalLinksModalState extends State<ExternalLinksModal> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-    return Scaffold(
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 4),
-        child: Column(
-          children: [
-            Expanded(
-              child: SingleChildScrollView(
-                physics: const ClampingScrollPhysics(),
-                controller: widget.scrollController,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Text(
-                      'Fill in external links',
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.w500,
-                      ),
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 4),
+      child: Column(
+        children: [
+          Expanded(
+            child: SingleChildScrollView(
+              physics: const ClampingScrollPhysics(),
+              controller: widget.scrollController,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    'Fill in external links',
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.w500,
                     ),
-                    const SizedBox(height: 18),
-                    Form(
-                      key: _form,
-                      child: TextFormField(
-                        controller: urlController,
-                        validator: validateUrl,
-                        decoration: InputDecoration(
-                          hintText: 'URL',
-                          filled: true,
-                          fillColor: theme.colorScheme.surfaceVariant,
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(18),
-                            borderSide: BorderSide.none,
-                          ),
-                          contentPadding: const EdgeInsets.symmetric(
-                            horizontal: 18,
-                            vertical: 8,
-                          ),
-                          isDense: true,
+                  ),
+                  const SizedBox(height: 18),
+                  Form(
+                    key: _form,
+                    child: TextFormField(
+                      controller: urlController,
+                      validator: validateUrl,
+                      decoration: InputDecoration(
+                        hintText: 'URL',
+                        filled: true,
+                        fillColor: theme.colorScheme.surfaceVariant,
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(18),
+                          borderSide: BorderSide.none,
                         ),
-                        style: const TextStyle(fontSize: 12),
+                        contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 18,
+                          vertical: 8,
+                        ),
+                        isDense: true,
                       ),
+                      style: const TextStyle(fontSize: 12),
                     ),
-                    const SizedBox(height: 8),
-                    Align(
-                      alignment: Alignment.centerRight,
-                      child: SecondaryButton(
-                        onPressed: add,
-                        child: const Text('Add'),
-                      ),
+                  ),
+                  const SizedBox(height: 8),
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: SecondaryButton(
+                      onPressed: add,
+                      child: const Text('Add'),
                     ),
-                    const SizedBox(height: 4),
-                    ...current.map(
-                      (e) => ExternalLinkCard(
-                        externalLink: e,
-                        trailing: GestureDetector(
-                          onTap: () {
-                            current.remove(e);
-                            setState(() {});
-                          },
-                          child: const Icon(
-                            Icons.delete,
-                            color: Colors.red,
-                            size: 20,
-                          ),
+                  ),
+                  const SizedBox(height: 4),
+                  ...current.map(
+                    (e) => ExternalLinkCard(
+                      externalLink: e,
+                      trailing: GestureDetector(
+                        onTap: () {
+                          current.remove(e);
+                          setState(() {});
+                        },
+                        child: const Icon(
+                          Icons.delete,
+                          color: Colors.red,
+                          size: 20,
                         ),
                       ),
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.only(top: 4),
-              child: PrimaryButton(
-                onPress: confirm,
-                child: const Text('Confirm'),
-              ),
-            )
-          ],
-        ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(top: 4),
+            child: PrimaryButton(
+              onPress: confirm,
+              child: const Text('Confirm'),
+            ),
+          )
+        ],
       ),
     );
   }

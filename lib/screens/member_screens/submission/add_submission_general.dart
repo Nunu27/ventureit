@@ -94,6 +94,7 @@ class _AddSubmissionGeneralState extends ConsumerState<AddSubmissionGeneral> {
 
     if (openHours != null) {
       state!.openHours = openHours;
+      closedDays = getClosedDays(state!.openHours);
       setState(() {});
     }
   }

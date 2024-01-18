@@ -21,6 +21,7 @@ final linkHostname = {
   'www.instagram.com': LinkSite.instagram,
   'gofood.co.id': LinkSite.gofood,
   'tiktok.com': LinkSite.tiktok,
+  'x.com': LinkSite.twitter,
   'twitter.com': LinkSite.twitter,
 };
 

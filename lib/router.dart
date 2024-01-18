@@ -20,6 +20,7 @@ import 'package:ventureit/screens/member_screens/explore_screen.dart';
 import 'package:ventureit/screens/member_screens/missions_screen.dart';
 import 'package:ventureit/screens/member_screens/profile/edit_profile_screen.dart';
 import 'package:ventureit/screens/member_screens/profile/profile_screen.dart';
+import 'package:ventureit/screens/member_screens/promote_screen.dart';
 import 'package:ventureit/screens/member_screens/submission/add_submission_contents.dart';
 import 'package:ventureit/screens/member_screens/submission/add_submission_general.dart';
 import 'package:ventureit/screens/member_screens/submission/add_submission_products.dart';
@@ -78,6 +79,8 @@ final routes = RouteMap(
         MaterialPage(child: DetailsScreen(id: route.pathParameters['id']!)),
     '/member/business/:id/contents': (route) =>
         MaterialPage(child: ContentsScreen(id: route.pathParameters['id']!)),
+    '/member/business/:id/promote': (route) =>
+        MaterialPage(child: PromoteScreen(id: route.pathParameters['id']!)),
     '/member/business/:id/edit': (route) {
       final id = route.pathParameters['id'];
       if (id != null) businessId = id;
