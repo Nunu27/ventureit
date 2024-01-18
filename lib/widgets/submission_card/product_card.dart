@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:ventureit/providers/add_submission_provider.dart';
 import 'package:ventureit/utils/utils.dart';
+import 'package:ventureit/widgets/remote_image.dart';
 
 class ProductCard extends StatelessWidget {
   final SubmissionProductItem product;
@@ -26,12 +27,19 @@ class ProductCard extends StatelessWidget {
         children: [
           ClipRRect(
             borderRadius: BorderRadius.circular(8),
-            child: Image.file(
-              product.picture!,
-              height: 70,
-              width: 70,
-              fit: BoxFit.cover,
-            ),
+            child: product.pictureUrl == null
+                ? Image.file(
+                    product.picture!,
+                    height: 70,
+                    width: 70,
+                    fit: BoxFit.cover,
+                  )
+                : RemoteImage(
+                    url: product.pictureUrl!,
+                    height: 70,
+                    width: 70,
+                    fit: BoxFit.cover,
+                  ),
           ),
           Expanded(
             child: Padding(

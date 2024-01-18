@@ -228,7 +228,12 @@ class _OpenHoursModalState extends State<OpenHoursModal> {
               padding: const EdgeInsets.only(top: 4),
               child: PrimaryButton(
                 onPress: confirm,
-                child: const Text('Confirm'),
+                child: const Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text('Confirm'),
+                  ],
+                ),
               ),
             )
           ],

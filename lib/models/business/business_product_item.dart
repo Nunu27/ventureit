@@ -1,3 +1,5 @@
+import 'package:ventureit/providers/add_submission_provider.dart';
+
 class BusinessProductItem {
   final String name;
   final int price;
@@ -32,6 +34,15 @@ class BusinessProductItem {
       'picture': picture,
       'updatedAt': updatedAt.millisecondsSinceEpoch,
     };
+  }
+
+  SubmissionProductItem toSubmissionProduct() {
+    return SubmissionProductItem(
+      name: name,
+      price: price,
+      picture: null,
+      pictureUrl: picture,
+    );
   }
 
   factory BusinessProductItem.fromMap(Map<String, dynamic> map) {

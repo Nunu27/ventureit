@@ -13,23 +13,28 @@ class InputForm extends StatelessWidget {
     this.maxLength,
     this.maxLines = 1,
     this.obscureText = false,
+    this.contentPadding,
+    this.initialValue,
   });
 
   final TextEditingController? controller;
   final TextInputType? keyboardType;
   final String? hintText;
+  final String? initialValue;
   final String? Function(String?)? validator;
   final bool obscureText;
   final Widget? suffixIcon;
   final List<TextInputFormatter>? inputFormatters;
   final int? maxLength;
   final int? maxLines;
+  final EdgeInsetsGeometry? contentPadding;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
     return TextFormField(
+      initialValue: initialValue,
       maxLength: maxLength,
       maxLines: maxLines,
       inputFormatters: inputFormatters,
@@ -39,7 +44,7 @@ class InputForm extends StatelessWidget {
       validator: validator,
       style: TextStyle(
         color: theme.colorScheme.onSurfaceVariant,
-        fontSize: 14,
+        fontSize: 12,
       ),
       decoration: InputDecoration(
         filled: true,
@@ -58,10 +63,9 @@ class InputForm extends StatelessWidget {
           ),
           borderSide: BorderSide.none,
         ),
-        contentPadding:
-            const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
+        contentPadding: contentPadding ??
+            const EdgeInsets.symmetric(horizontal: 18, vertical: 8),
       ),
     );
   }
 }
-

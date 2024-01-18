@@ -135,7 +135,12 @@ class _ExternalLinksModalState extends State<ExternalLinksModal> {
               padding: const EdgeInsets.only(top: 4),
               child: PrimaryButton(
                 onPress: confirm,
-                child: const Text('Confirm'),
+                child: const Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text('Confirm'),
+                  ],
+                ),
               ),
             )
           ],

@@ -1,3 +1,4 @@
+import 'package:currency_text_input_formatter/currency_text_input_formatter.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -8,9 +9,16 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:ventureit/models/failure.dart';
 import 'package:ventureit/models/open_hours.dart';
 import 'package:ventureit/providers/add_submission_provider.dart';
+import 'package:ventureit/providers/edit_business_provider.dart';
 
 final GlobalKey<ScaffoldMessengerState> snackbarKey =
     GlobalKey<ScaffoldMessengerState>();
+
+final currencyFormatter = CurrencyTextInputFormatter(
+  locale: 'id',
+  decimalDigits: 0,
+  symbol: 'Rp. ',
+);
 
 final numberFormatter = NumberFormat.decimalPatternDigits(
   locale: 'in',
@@ -116,6 +124,7 @@ Future<bool> showDiscardData(BuildContext context, WidgetRef ref) async {
     optionTwo: 'Discard',
     onOptionTwo: () {
       ref.read(addSubmissionProvider.notifier).update((state) => null);
+      ref.read(editBusinessProvider.notifier).update((state) => null);
       Navigator.of(context).pop(true);
     },
   );

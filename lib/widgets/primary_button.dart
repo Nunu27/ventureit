@@ -4,9 +4,15 @@ class PrimaryButton extends StatelessWidget {
   final Widget? child;
   final VoidCallback? onPress;
   final double height;
+  final Size? minimumSize;
 
-  const PrimaryButton(
-      {super.key, required this.onPress, this.child, this.height = 40});
+  const PrimaryButton({
+    super.key,
+    required this.onPress,
+    this.child,
+    this.height = 40,
+    this.minimumSize,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -16,10 +22,10 @@ class PrimaryButton extends StatelessWidget {
       style: ElevatedButton.styleFrom(
         backgroundColor: theme.colorScheme.primary,
         foregroundColor: theme.colorScheme.onPrimary,
-        minimumSize: Size(double.infinity, height),
+        minimumSize: minimumSize,
         padding: const EdgeInsets.symmetric(
-          horizontal: 24,
-          vertical: 14,
+          horizontal: 18,
+          vertical: 8,
         ),
       ),
       onPressed: onPress,
