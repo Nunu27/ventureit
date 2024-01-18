@@ -109,8 +109,6 @@ class _GeneralEditBusinessState extends ConsumerState<GeneralEditBusiness> {
     }
   }
 
-  void submit() {}
-
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -165,10 +163,16 @@ class _GeneralEditBusinessState extends ConsumerState<GeneralEditBusiness> {
                   ),
                   CustomTextForm(
                     controller: nameController,
+                    onChanged: (p0) {
+                      if (state != null) state!.name = p0 ?? '';
+                    },
                     label: "Name",
                   ),
                   CustomTextForm(
                     controller: descriptionController,
+                    onChanged: (p0) {
+                      if (state != null) state!.description = p0 ?? '';
+                    },
                     label: "Description",
                   ),
                   CustomPressableInput(

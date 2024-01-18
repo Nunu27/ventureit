@@ -228,11 +228,11 @@ class _OpenHoursModalState extends State<OpenHoursModal> {
             child: PrimaryButton(
               onPress: confirm,
               child: const Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text('Confirm'),
-                  ],
-                ),
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text('Confirm'),
+                ],
+              ),
             ),
           )
         ],

@@ -12,6 +12,7 @@ import 'package:ventureit/theme/color_schemes.dart';
 import 'package:ventureit/utils/utils.dart';
 
 final navigatorKey = GlobalKey<NavigatorState>();
+final businessEditRegex = RegExp(r'^\/member\/business\/.*\/edit.*$');
 
 class RouterDelegate extends RoutemasterDelegate {
   final WidgetRef _ref;
@@ -30,7 +31,8 @@ class RouterDelegate extends RoutemasterDelegate {
     } else if (_ref.read(modalControllerProvider).modalActive) {
       navigatorKey.currentState!.pop();
       return true;
-    } else if (currentConfiguration!.path == '/member/add-submission') {
+    } else if (currentConfiguration!.path == '/member/add-submission' ||
+        businessEditRegex.hasMatch(currentConfiguration!.path)) {
       FocusManager.instance.primaryFocus?.unfocus();
 
       final res =

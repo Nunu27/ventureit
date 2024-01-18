@@ -309,9 +309,16 @@ class SubmissionController extends StateNotifier<bool> {
           key: 'externalLinks', value: newExternalLinks.map((e) => e.toMap())));
     }
 
+    if (submissionData.isEmpty) {
+      showSnackBar("You didn't change any data");
+      state = false;
+      return;
+    }
+
     final submission = Submission(
       id: uuid.v4(),
       userId: _ref.read(userProvider)!.id,
+      businessId: data.reference.id,
       data: submissionData,
       status: SubmissionStatus.pending,
       createdAt: DateTime.now(),
@@ -322,7 +329,7 @@ class SubmissionController extends StateNotifier<bool> {
     state = false;
 
     res.fold((l) => showSnackBar(l.message), (r) {
-      _ref.read(addSubmissionProvider.notifier).update((state) => null);
+      _ref.read(editBusinessProvider.notifier).update((state) => null);
       Routemaster.of(context).replace('/member/explore');
     });
   }

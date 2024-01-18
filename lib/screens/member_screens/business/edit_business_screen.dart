@@ -6,6 +6,7 @@ import 'package:ventureit/controllers/submission_controller.dart';
 import 'package:ventureit/models/business/business.dart';
 import 'package:ventureit/providers/edit_business_provider.dart';
 import 'package:ventureit/utils/utils.dart';
+import 'package:ventureit/widgets/loader_overlay.dart';
 
 class EditBusinessScreen extends ConsumerStatefulWidget {
   final String businessId;
@@ -28,6 +29,8 @@ class _EditBusinessScreenState extends ConsumerState<EditBusinessScreen> {
     super.initState();
 
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      checkGuest(context);
+
       EditBusinessState? stateData = ref.read(editBusinessProvider);
       business = ref.read(getBusinessByIdProvider(widget.businessId)).value;
       if (stateData == null && business != null) {
@@ -54,6 +57,7 @@ class _EditBusinessScreenState extends ConsumerState<EditBusinessScreen> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final tabPage = TabPage.of(context);
+    final isLoading = ref.watch(submissionControllerProvider);
 
     return PopScope(
       canPop: false,
@@ -67,47 +71,50 @@ class _EditBusinessScreenState extends ConsumerState<EditBusinessScreen> {
           }
         }
       },
-      child: Scaffold(
-        appBar: AppBar(
-          title: Text(
-            "Edit Business",
-            style: TextStyle(
-              fontSize: 24,
-              fontWeight: FontWeight.w500,
-              color: theme.colorScheme.onBackground,
-            ),
-          ),
-          actions: [
-            IconButton(
-              onPressed: () {},
-              icon: Icon(
-                Icons.done,
-                size: 24,
+      child: LoaderOverlay(
+        isLoading: isLoading,
+        child: Scaffold(
+          appBar: AppBar(
+            title: Text(
+              "Edit Business",
+              style: TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.w500,
                 color: theme.colorScheme.onBackground,
               ),
             ),
-          ],
-          bottom: TabBar(
-            controller: tabPage.controller,
-            tabs: const [
-              Tab(
-                text: 'General',
-              ),
-              Tab(
-                text: 'Products',
-              ),
-              Tab(
-                text: 'Contents',
+            actions: [
+              IconButton(
+                onPressed: submit,
+                icon: Icon(
+                  Icons.done,
+                  size: 24,
+                  color: theme.colorScheme.onBackground,
+                ),
               ),
             ],
+            bottom: TabBar(
+              controller: tabPage.controller,
+              tabs: const [
+                Tab(
+                  text: 'General',
+                ),
+                Tab(
+                  text: 'Products',
+                ),
+                Tab(
+                  text: 'Contents',
+                ),
+              ],
+            ),
           ),
-        ),
-        body: TabBarView(
-          controller: tabPage.controller,
-          children: [
-            for (final stack in tabPage.stacks)
-              PageStackNavigator(stack: stack),
-          ],
+          body: TabBarView(
+            controller: tabPage.controller,
+            children: [
+              for (final stack in tabPage.stacks)
+                PageStackNavigator(stack: stack),
+            ],
+          ),
         ),
       ),
     );
