@@ -43,6 +43,24 @@ class UserRepository {
     }
   }
 
+  FutureVoid updateBalance(String id, int balance) async {
+    try {
+      return right(await _users
+          .doc(id)
+          .update({'balance': FieldValue.increment(balance)}));
+    } catch (e) {
+      return left(getError(e));
+    }
+  }
+
+  FutureVoid updateToken(String id, String? token) async {
+    try {
+      return right(await _users.doc(id).update({'fcmToken': token}));
+    } catch (e) {
+      return left(getError(e));
+    }
+  }
+
   FutureVoid updateUser(UserModel user) async {
     try {
       final batch = _firestore.batch();

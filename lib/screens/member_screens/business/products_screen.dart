@@ -14,8 +14,7 @@ class ProductsScreen extends ConsumerWidget {
     return ref.watch(getBusinessByIdProvider(id)).when(
           data: (business) => business.products.isEmpty
               ? const Center(
-                  child: Text(
-                      "Whoops, seems we don't have any data for this business"),
+                  child: Text("No products"),
                 )
               : ListView.builder(
                   padding: const EdgeInsets.all(14),

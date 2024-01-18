@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:ventureit/controllers/auth_controller.dart';
 import 'package:ventureit/controllers/location_controller.dart';
 import 'package:ventureit/models/business/business.dart';
 import 'package:ventureit/models/business/external_link.dart';
 import 'package:ventureit/models/filter_options.dart';
 import 'package:ventureit/models/location.dart';
 import 'package:ventureit/models/open_hours.dart';
+import 'package:ventureit/models/review.dart';
+import 'package:ventureit/utils/utils.dart';
 import 'package:ventureit/widgets/modal_sheet/category_select.dart';
 import 'package:ventureit/widgets/modal_sheet/external_link_modal.dart';
 import 'package:ventureit/widgets/modal_sheet/filter_modal.dart';
@@ -158,10 +161,24 @@ class ModalController {
   Future<void> showReviewModal(
     BuildContext context,
     String businessId,
+    Review? oldReview,
   ) async {
+    if (_ref.read(userProvider) == null) {
+      showSnackBar("Please login to post a review");
+      return;
+    }
+
+    modalActive = true;
     await showModalBottomSheet(
       context: context,
-      builder: (context) => ReviewModal(),
+      useRootNavigator: true,
+      showDragHandle: true,
+      isScrollControlled: true,
+      builder: (context) => ReviewModal(
+        businessId: businessId,
+        review: oldReview,
+      ),
     );
+    modalActive = false;
   }
 }

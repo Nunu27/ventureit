@@ -42,6 +42,19 @@ class UserController extends StateNotifier<bool> {
     return _repository.getUserData(id);
   }
 
+  void updateBalance(String id, int balance) async {
+    state = true;
+    final res = await _repository.updateBalance(id, balance);
+    state = false;
+
+    res.fold(
+      (l) => showSnackBar(l.message),
+      (r) => _ref.read(userProvider.notifier).update(
+            (state) => state!.copyWith(balance: state.balance + balance),
+          ),
+    );
+  }
+
   void updateUser(BuildContext context, UserModel user, File? avatar) async {
     state = true;
 

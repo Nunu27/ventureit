@@ -5,6 +5,7 @@ import 'package:ventureit/controllers/business_controller.dart';
 import 'package:ventureit/controllers/location_controller.dart';
 import 'package:ventureit/widgets/error_view.dart';
 import 'package:ventureit/widgets/loader.dart';
+import 'package:ventureit/widgets/rating.dart';
 
 class BusinessScreen extends ConsumerWidget {
   final String businessId;
@@ -80,7 +81,7 @@ class BusinessScreen extends ConsumerWidget {
                                 children: [
                                   openHours == null
                                       ? Text(
-                                          "Close  ",
+                                          "Closed  ",
                                           style: TextStyle(
                                             color: theme.colorScheme.tertiary,
                                             fontSize: 12,
@@ -98,7 +99,7 @@ class BusinessScreen extends ConsumerWidget {
                                               ),
                                             )
                                           : Text(
-                                              "Close  ",
+                                              "Closed  ",
                                               style: TextStyle(
                                                 color:
                                                     theme.colorScheme.tertiary,
@@ -118,17 +119,9 @@ class BusinessScreen extends ConsumerWidget {
                                   const VerticalDivider(),
                                   Column(
                                     children: [
-                                      Row(
-                                        children: [
-                                          const Icon(Icons.star,
-                                              color: Colors.amber),
-                                          Text(
-                                            business.rating.toString(),
-                                            style: const TextStyle(
-                                              fontSize: 12,
-                                            ),
-                                          )
-                                        ],
+                                      Rating(
+                                        business.rating,
+                                        scale: 1.2,
                                       ),
                                       Text(
                                         '(${business.ratedBy.toString()})',

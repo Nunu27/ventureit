@@ -21,24 +21,33 @@ class DetailsScreen extends ConsumerWidget {
                   'External link',
                   style: TextStyle(fontWeight: FontWeight.w500),
                 ),
+                if (business.externalLinks.isEmpty)
+                  Text(
+                    'No data',
+                    style: const TextStyle(fontSize: 12),
+                  ),
                 ...business.externalLinks.map(
-                  (externalLink) => Row(
-                    children: [
-                      Image.asset(
-                        externalLink.site.logo,
-                        height: 24,
-                        width: 24,
-                      ),
-                      GestureDetector(
-                        onTap: () => openUrl(externalLink.url),
-                        child: Text(
-                          externalLink.site.source,
-                          style: const TextStyle(
-                            fontSize: 12,
-                          ),
+                  (externalLink) => Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 4.0),
+                    child: Row(
+                      children: [
+                        Image.asset(
+                          externalLink.site.logo,
+                          height: 24,
+                          width: 24,
                         ),
-                      )
-                    ],
+                        const SizedBox(width: 8),
+                        GestureDetector(
+                          onTap: () => openUrl(externalLink.url),
+                          child: Text(
+                            externalLink.site.source,
+                            style: const TextStyle(
+                              fontSize: 12,
+                            ),
+                          ),
+                        )
+                      ],
+                    ),
                   ),
                 ),
                 const SizedBox(height: 16),
@@ -46,29 +55,40 @@ class DetailsScreen extends ConsumerWidget {
                   'Description',
                   style: TextStyle(fontWeight: FontWeight.w500),
                 ),
-                Text(business.description ?? 'No description yet'),
+                Text(
+                  business.description ?? 'No description yet',
+                  style: const TextStyle(fontSize: 12),
+                ),
                 const SizedBox(height: 16),
                 const Text(
                   'Open hours',
                   style: TextStyle(fontWeight: FontWeight.w500),
                 ),
+                if (business.openHours.isEmpty)
+                  Text(
+                    'No data',
+                    style: const TextStyle(fontSize: 12),
+                  ),
                 ...business.openHours.map(
-                  (openHour) => Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        openHour.daysString(),
-                        style: const TextStyle(
-                          fontSize: 12,
+                  (openHour) => Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 4.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          openHour.daysString(),
+                          style: const TextStyle(
+                            fontSize: 12,
+                          ),
                         ),
-                      ),
-                      Text(
-                        openHour.timeString(),
-                        style: const TextStyle(
-                          fontSize: 12,
+                        Text(
+                          openHour.timeString(),
+                          style: const TextStyle(
+                            fontSize: 12,
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 )
               ],

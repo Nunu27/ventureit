@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -48,32 +49,25 @@ class AuthRepository {
         password: password,
       );
 
-      UserModel user;
+      UserModel user = UserModel(
+        id: userCredential.user!.uid,
+        avatar: Constants.defaultAvatar,
+        email: userCredential.user!.email!,
+        name: fullName,
+        username: username,
+        role: UserRole.member,
+        balance: 0,
+        createdAt: DateTime.now(),
+        updatedAt: DateTime.now(),
+        fcmToken: await FirebaseMessaging.instance.getToken(),
+      );
 
-      if (userCredential.additionalUserInfo!.isNewUser) {
-        user = UserModel(
-          id: userCredential.user!.uid,
-          avatar: Constants.defaultAvatar,
-          email: userCredential.user!.email!,
-          name: fullName,
-          username: username,
-          role: UserRole.member,
-          balance: 0,
-          createdAt: DateTime.now(),
-          updatedAt: DateTime.now(),
-        );
-
-        if (!_auth.currentUser!.emailVerified) {
-          await _auth.currentUser!.sendEmailVerification();
-          showSnackBar("Check your email for verification.");
-        }
-
-        await _userRepository.updateUser(user);
-      } else {
-        user = (await _userRepository
-            .getUserData(userCredential.user!.uid)
-            .first)!;
+      if (!_auth.currentUser!.emailVerified) {
+        await _auth.currentUser!.sendEmailVerification();
+        showSnackBar("Check your email for verification.");
       }
+
+      await _userRepository.saveUser(user);
 
       return right(user);
     } catch (e) {
@@ -89,6 +83,11 @@ class AuthRepository {
       final userCredential = await _auth.signInWithEmailAndPassword(
         email: email,
         password: password,
+      );
+
+      await _userRepository.updateToken(
+        userCredential.user!.uid,
+        await FirebaseMessaging.instance.getToken(),
       );
       final user =
           await _userRepository.getUserData(userCredential.user!.uid).first;
@@ -131,10 +130,15 @@ class AuthRepository {
           balance: 0,
           createdAt: DateTime.now(),
           updatedAt: DateTime.now(),
+          fcmToken: await FirebaseMessaging.instance.getToken(),
         );
 
-        await _userRepository.updateUser(user);
+        await _userRepository.saveUser(user);
       } else {
+        await _userRepository.updateToken(
+          userCredential.user!.uid,
+          await FirebaseMessaging.instance.getToken(),
+        );
         user = (await _userRepository
             .getUserData(userCredential.user!.uid)
             .first)!;
@@ -147,6 +151,7 @@ class AuthRepository {
   }
 
   void logOut() async {
+    await _userRepository.updateToken(_auth.currentUser!.uid, null);
     await _googleSignIn.signOut();
     await _auth.signOut();
   }

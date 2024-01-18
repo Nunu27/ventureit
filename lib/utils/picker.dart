@@ -5,3 +5,12 @@ Future<FilePickerResult?> pickImage() async {
 
   return image;
 }
+
+Future<FilePickerResult?> pickMedia() async {
+  final media = await FilePicker.platform.pickFiles(
+    type: FileType.image,
+    allowMultiple: true,
+  );
+
+  return media;
+}

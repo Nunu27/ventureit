@@ -5,6 +5,7 @@ import 'package:ventureit/controllers/location_controller.dart';
 import 'package:ventureit/models/business/business_basic.dart';
 import 'package:ventureit/widgets/error_view.dart';
 import 'package:ventureit/widgets/loader.dart';
+import 'package:ventureit/widgets/rating.dart';
 import 'package:ventureit/widgets/remote_image.dart';
 
 final currentBusinessCardProvider = Provider<AsyncValue<BusinessBasic>>((ref) {
@@ -89,20 +90,7 @@ class BusinessCard extends ConsumerWidget {
                                         ],
                                       ),
                                     ),
-                                    Row(
-                                      children: [
-                                        const Icon(
-                                          Icons.star,
-                                          color: Colors.amber,
-                                          size: 14,
-                                        ),
-                                        const SizedBox(width: 4),
-                                        Text(
-                                          business.rating.toString(),
-                                          style: const TextStyle(fontSize: 10),
-                                        )
-                                      ],
-                                    ),
+                                    Rating(business.rating),
                                   ],
                                 ),
                               ),

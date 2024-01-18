@@ -70,7 +70,7 @@ class _AddSubmissionProductsState extends ConsumerState<AddSubmissionProducts> {
     state.products.add(
       SubmissionProductItem(
         name: nameController.text,
-        price: int.parse(priceController.text.replaceAll(RegExp(r'[^\d]'), '')),
+        price: getNumber(priceController.text),
         picture: picture,
       ),
     );
