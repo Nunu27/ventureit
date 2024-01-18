@@ -192,7 +192,12 @@ class _AddSubmissionGeneralState extends ConsumerState<AddSubmissionGeneral> {
                     label: 'Cover image',
                     height: 200,
                     child: state?.cover == null
-                        ? const Center(child: Icon(Icons.camera_alt))
+                        ? Center(
+                            child: Icon(
+                              Icons.camera_alt,
+                              color: theme.colorScheme.onSurfaceVariant,
+                            ),
+                          )
                         : Expanded(
                             child: ClipRRect(
                               borderRadius: BorderRadius.circular(18),

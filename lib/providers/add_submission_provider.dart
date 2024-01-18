@@ -14,11 +14,13 @@ class SubmissionProductItem {
   final String name;
   final int price;
   final File? picture;
+  final String? pictureUrl;
 
   SubmissionProductItem({
     required this.name,
     required this.price,
     required this.picture,
+    this.pictureUrl,
   });
 }
 

@@ -119,24 +119,32 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                       height: 45,
                     ),
                     InputForm(
+                      contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 24, vertical: 14),
                       controller: emailController,
                       validator: validateEmail,
                       hintText: "Email",
                     ),
                     const SizedBox(height: 14),
                     InputForm(
+                      contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 24, vertical: 14),
                       controller: fullNameController,
                       validator: validateUsername,
                       hintText: "Full name",
                     ),
                     const SizedBox(height: 14),
                     InputForm(
+                      contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 24, vertical: 14),
                       controller: usernameController,
                       validator: validateUsername,
                       hintText: "Username",
                     ),
                     const SizedBox(height: 14),
                     InputForm(
+                      contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 24, vertical: 14),
                       controller: passwordController,
                       obscureText: passwordLocked,
                       validator: validatePassword,
@@ -152,6 +160,8 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                     ),
                     const SizedBox(height: 14),
                     InputForm(
+                      contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 24, vertical: 14),
                       controller: passwordConfirmationController,
                       obscureText: validateLocked,
                       validator: validateConfirmation,

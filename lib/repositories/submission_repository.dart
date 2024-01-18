@@ -89,7 +89,7 @@ class SubmissionRepository {
         } else if (entry is AddSubmission) {
           updateMap[entry.key] = FieldValue.arrayUnion(entry.value);
         } else if (entry is EditSubmission) {
-          updateMap[entry.key] = entry.to;
+          updateMap[entry.key] = entry.value;
         } else if (entry is RemoveSubmission) {
           updateMap[entry.key] = FieldValue.arrayRemove(entry.value);
         }

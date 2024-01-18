@@ -77,7 +77,12 @@ class _CategorySelectModalState extends State<CategorySelectModal> {
           padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 4),
           child: PrimaryButton(
             onPress: confirm,
-            child: const Text('Confirm'),
+            child: const Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text('Confirm'),
+              ],
+            ),
           ),
         )
       ],

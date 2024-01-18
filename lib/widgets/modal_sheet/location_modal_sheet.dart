@@ -5,6 +5,7 @@ import 'package:ventureit/controllers/modal_controller.dart';
 import 'package:ventureit/models/location.dart';
 import 'package:ventureit/utils/location_utils.dart';
 import 'package:ventureit/widgets/loader_overlay.dart';
+import 'package:ventureit/widgets/primary_button.dart';
 
 class LocationModalSheet extends ConsumerStatefulWidget {
   const LocationModalSheet({super.key});
@@ -150,18 +151,11 @@ class _LocationModalSheetState extends ConsumerState<LocationModalSheet> {
                 ),
               ),
               const SizedBox(height: 20),
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: theme.colorScheme.primary,
-                  foregroundColor: theme.colorScheme.onPrimary,
-                  minimumSize: const Size(double.infinity, 50),
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 10,
-                    vertical: 1,
-                  ),
+              PrimaryButton(
+                onPress: locationPick == null ? null : confirm,
+                child: const Row(
+                  children: [Text("Confirm")],
                 ),
-                onPressed: locationPick == null ? null : confirm,
-                child: const Text('Confirm'),
               )
             ],
           ),

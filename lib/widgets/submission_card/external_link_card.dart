@@ -34,7 +34,11 @@ class ExternalLinkCard extends StatelessWidget {
             child: Row(
               children: [
                 Expanded(
-                  child: Text(externalLink.url),
+                  child: Text(
+                    externalLink.url,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
                 ),
                 if (trailing != null) trailing!
               ],

@@ -109,6 +109,10 @@ class _LogInScreenState extends ConsumerState<LogInScreen> {
                       height: 45,
                     ),
                     InputForm(
+                      contentPadding: const EdgeInsets.symmetric(
+                        horizontal: 24,
+                        vertical: 14,
+                      ),
                       controller: emailController,
                       keyboardType: TextInputType.emailAddress,
                       hintText: "Email",
@@ -116,6 +120,10 @@ class _LogInScreenState extends ConsumerState<LogInScreen> {
                     ),
                     const SizedBox(height: 14),
                     InputForm(
+                      contentPadding: const EdgeInsets.symmetric(
+                        vertical: 14,
+                        horizontal: 24,
+                      ),
                       validator: validatePassword,
                       controller: passwordController,
                       obscureText: passwordLocked,
@@ -136,7 +144,12 @@ class _LogInScreenState extends ConsumerState<LogInScreen> {
                     ),
                     PrimaryButton(
                       onPress: logIn,
-                      child: const Text('Login'),
+                      child: const Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text('Login'),
+                        ],
+                      ),
                     ),
                     const Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,

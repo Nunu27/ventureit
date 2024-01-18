@@ -6,6 +6,7 @@ class CustomTextForm extends StatelessWidget {
   final TextEditingController? controller;
   final String label;
   final String? placeholder;
+  final String? initialValue;
   final int? maxLength;
   final int? maxLines;
   final String? Function(String?)? validator;
@@ -24,6 +25,7 @@ class CustomTextForm extends StatelessWidget {
     this.onChanged,
     this.keyboardType,
     this.inputFormatters,
+    this.initialValue,
   });
 
   @override
@@ -35,10 +37,11 @@ class CustomTextForm extends StatelessWidget {
         children: [
           Text(
             label,
-            style: const TextStyle(fontSize: 16),
+            style: TextStyle(fontSize: 16),
           ),
           const SizedBox(height: 8),
           InputForm(
+            initialValue: initialValue,
             controller: controller,
             maxLines: maxLines,
             maxLength: maxLength,
